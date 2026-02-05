@@ -1,0 +1,242 @@
+# Typography
+
+Learn a system of logical guidelines to make text beautiful and easy to read.
+
+## Typeface Classifications
+
+**Serif** - Decorative tails/feet at ends of letters. Traditional, classic, formal mood. Some legible at small sizes, others better for large.
+
+**Sans Serif** - No decorative tails. Modern, simple. Highly legible at all sizes. Safe, neutral option for most interfaces.
+
+**Script** - Based on handwriting. Low legibility - not suitable for small sizes. Can convey formal or casual mood at large sizes.
+
+**Display** - Wide range of decorative styles. Designed for large sizes only. Strong character, good for conveying different moods.
+
+**Monospaced** - Every character takes same horizontal space. Good for code and numbers (easier to compare).
+
+## Use a Single Sans Serif Typeface
+
+Safest for most interface designs.
+
+### Reasons
+
+**1. Legibility**
+- Sans serif most legible
+- Main purpose of interface text: clearly communicate information
+- If not legible = harder to read, understand, use
+
+**2. Neutrality**
+- Don't convey strong mood/personality
+- Fits most brand personalities
+- Content is focal point, not typeface
+- Less chance of unsuitable choice
+
+**3. Simplicity**
+- Less character and detail
+- Complicated typefaces = distracting, increased cognitive load
+- Less is more with typography
+
+## Evoke Emotion Using a Second Typeface for Headings
+
+As you get more confident, try second typeface for HEADINGS ONLY.
+
+**Typeface Moods:**
+- **Sans serif** - neutral, minimal, modern
+- **Serif** - traditional, established, classic
+- **Rounded sans serif** - fun, soft, playful
+- **Casual script** - personal, handmade
+- **Formal script** - formal, feminine, elegant
+- **Light sans serif** - chic, modern, luxurious
+
+## Tips for Choosing a Sans Serif Typeface
+
+- Choose popular, tried and tested typefaces
+- Look for variety of weights (light, regular, medium, semibold, bold)
+- Look for taller lowercase letters (x-height) and greater letter spacing = more legible at small sizes
+- Get inspiration from companies known for good design
+- Ensure multi-language support if needed
+- Look for OpenType features
+- When in doubt, use default system typeface
+
+## Use Regular and Bold Font Weights Only
+
+Don't use all available weights - adds noise and clutter.
+
+**Guidelines:**
+- **Bold** - for headings to emphasise
+- **Regular** - for smaller text
+- Very thin or thick weights - headings/large text only (difficult at small sizes)
+
+## Use a Type Scale to Set Font Sizes
+
+Logical way to create balanced font sizes that work together.
+
+### How to Create
+
+1. Start with base font size (body text)
+2. Multiply by scale factor for larger sizes
+
+### Popular Type Scales (smallest to largest)
+- 1.067 – Minor Second
+- 1.125 – Major Second
+- 1.200 – Minor Third
+- 1.250 – Major Third
+- 1.333 – Perfect Fourth
+- 1.414 – Augmented Fourth
+- 1.500 – Perfect Fifth
+- 1.618 – Golden Ratio
+
+### Example (1.200 Minor Third, base 16px)
+```
+Heading 1: 40px / 48px line-height / bold
+Heading 2: 32px / 40px line-height / bold
+Heading 3: 24px / 32px line-height / bold
+Heading 4: 20px / 28px line-height / bold
+Body:      16px / 24px line-height / regular
+Small:     14px / 20px line-height / regular
+```
+
+**Tips:**
+- Round to nearest whole number
+- Try to make line-heights divisible by 4 (aligns to 4pt grid)
+- Adjust as needed once confident
+
+### Small vs Large Type Scales
+
+**Small scales (e.g., Major Second):**
+- Less difference between sizes
+- Better for complex apps, tools, dashboards
+
+**Large scales (e.g., Perfect Fifth):**
+- Larger differences between sizes
+- Better for simpler interfaces, marketing sites
+
+### Responsive Type Scales
+Switch to smaller scale on mobile to prevent text wrapping.
+
+## Make Long Body Text Bigger
+
+Most websites have small text (designers prefer aesthetics).
+
+**Guideline:** Make long body text at least 18px.
+
+People read from ~arm's length away on all devices.
+
+## Use at Least 1.5 Line Height for Long Body Text
+
+**Line height** = vertical distance between two lines of text.
+
+**For accessibility and readability:**
+- Minimum 1.5 (150%) for body text
+- Keep between 1.5 and 2
+
+**Benefits:**
+- Prevents rereading same line
+- More comfortable to read
+
+**Tips:**
+- Longer lines = taller line height
+- Darker/heavier typefaces = taller line height
+- Typefaces that look larger = taller line height
+
+## Decrease Line Height as Font Size Increases
+
+Large text doesn't need 1.5 line height.
+
+**Reason:** Line height is relative to font size - same percentage creates larger actual gap on bigger text.
+
+**Example:**
+- Heading at 24px with 1.6 line height = large gap
+- Change to 1.3 line height for consistent gap
+
+## Ensure Ideal Line Length
+
+**Optimal:** 40-80 characters per line (including spaces)
+
+**Too long:**
+- Hard to gauge where line starts/ends
+- Eyes get lost tracking back
+
+**Too short:**
+- Eyes stressed from frequent travel back
+
+**Guidelines:**
+- Don't use full page width for text
+- Align text block to left or centre of page
+- Especially important for long body text
+
+## Left Align Text
+
+English read left to right, downwards in F-pattern.
+
+**Left-aligned = easiest to read:**
+- Each line starts at same left edge
+- Consistent anchor for eyes
+
+### Don't Centre Align Long Body Text
+- Starting point changes each line
+- Eyes work harder to find start
+- OK for headings and short text
+
+### Don't Justify Long Body Text
+- Variations in letter/word spacing
+- Harder to distinguish text and follow lines
+- Especially hard for dyslexia
+- Creates distracting "rivers" of white space
+
+### Avoid Multiple Text Alignments
+Harder to follow, looks messy.
+
+## Decrease Letter Spacing for Large Text
+
+**Letter spacing** = space between letters
+
+**Guidelines:**
+- Decrease letter spacing more as text gets bigger
+- "Text type" typefaces designed for small sizes have wide letter spacing
+- "Display type" typefaces designed for large sizes - may not need adjustment
+
+## Ensure Text on Photos is Legible
+
+Common mistake: placing text directly on photos.
+
+**Contrast requirements:**
+- Small text (≤18px): 4.5:1 minimum
+- Large text (>18px bold OR >24px regular): 3:1 minimum
+
+### Solutions
+
+**Linear gradient overlay:**
+- Dark grey, 90% opacity at bottom, 0% halfway up
+- Add text shadow
+
+**Semi-transparent overlay:**
+- Dark grey, 50% opacity over entire photo
+- Add text shadow
+
+**Blurred semi-transparent overlay:**
+- Add blur effect for easier reading
+
+**Solid text background:**
+- Popular for video captions
+- White text on dark grey background
+
+## Avoid Light Grey and Pure Black Text
+
+**Light grey text:**
+- Accessibility issue - many can't read or find difficult
+- Always aim for 4.5:1 contrast minimum
+
+**Pure black text:**
+- Too high contrast causes eye strain and fatigue
+- Black: 0% brightness, White: 100%
+- Large difference makes eyes work harder
+- Use accessible dark grey instead
+
+## Chapter Summary
+
+1. Limit to regular and bold weights in single sans serif typeface for legibility, neutrality, simplicity
+2. Use type scale to create predefined font sizes that work together
+3. Use 1.5+ line height for long body text; decrease line height as font size increases
+4. Ensure 40-80 characters per line for readability
+5. Left align text for optimal readability (F-pattern)
