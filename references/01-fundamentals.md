@@ -220,12 +220,76 @@ Similar elements look and work in a similar way.
 
 Interactive elements must change appearance when interacted with.
 
-**5 Interaction States:**
-1. **Default/Enabled** - not being interacted with, indicates interactivity
-2. **Hover** - cursor placed over element, visual feedback
-3. **Press/Active** - element is being pressed
-4. **Focus** - keyboard navigation indicator
-5. **Disabled** - element is not interactive
+**8 Interaction States Checklist:**
+
+| State | When | Design Treatment |
+|-------|------|------------------|
+| **Default** | At rest | Base styling |
+| **Hover** | Pointer over (not touch) | Subtle lift, colour shift |
+| **Focus** | Keyboard/programmatic focus | Visible focus ring |
+| **Active/Press** | Being clicked/tapped | Pressed in, darker |
+| **Disabled** | Not interactive | Reduced opacity, no pointer |
+| **Loading** | Processing | Spinner, skeleton |
+| **Error** | Invalid state | Red border, icon, message |
+| **Success** | Completed | Green check, confirmation |
+
+**Common miss:** Designing hover without focus. Keyboard users never see hover states - they need visible focus indicators.
+
+### Focus Rings with :focus-visible
+
+Never remove focus indicators without replacement - it's an accessibility violation.
+
+```css
+/* Hide focus ring for mouse clicks */
+button:focus {
+  outline: none;
+}
+
+/* Show focus ring for keyboard navigation */
+button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+```
+
+**Focus ring requirements:**
+- High contrast (3:1 minimum against adjacent colours)
+- 2-3px thick
+- Offset from element (not inside it)
+- Consistent across all interactive elements
+
+## Animation and Motion
+
+### Respect Reduced Motion Preferences
+
+Vestibular disorders affect ~35% of adults over 40. Always respect the user's motion preferences:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+### Only Animate Transform and Opacity
+
+For smooth 60fps animations, only animate `transform` and `opacity`. Other properties (width, height, margin, padding) trigger expensive layout recalculations.
+
+```css
+/* Good - GPU accelerated */
+.card:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* Avoid - triggers layout */
+.card:hover {
+  margin-top: -2px;
+  height: 102%;
+}
+```
 
 ## Chapter Summary
 

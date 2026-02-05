@@ -247,6 +247,19 @@ Divide photo into 3x3 grid = 4 focal points at intersections.
 - Action shots (increases sense of motion)
 - Landscapes (align horizon to grid)
 
+## Consider Optical Adjustments
+
+Mathematical centering doesn't always look visually centered. Our eyes perceive shapes differently based on their weight distribution.
+
+**Common situations requiring optical adjustment:**
+
+- **Play icons in circles:** The triangle's point has less visual weight - shift it slightly right to look centered
+- **Text alignment:** Text often needs `-0.05em` negative margin on the left to align optically with elements above
+- **Icons next to text:** May need 1-2px vertical shift to align with text baseline
+- **Button padding:** Bottom padding often needs 1-2px extra to feel equal to top padding
+
+This is an advanced technique that requires a trained eye. When something looks "off" despite being mathematically correct, optical adjustment is usually the answer.
+
 ## Chapter Summary
 
 1. Group related elements using containers, proximity, similarity, or continuity

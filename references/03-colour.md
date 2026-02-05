@@ -100,10 +100,23 @@ Benefits:
 - Use dark grey instead
 - Black: 0% brightness, White: 100% brightness - large difference strains eyes
 
-## Add a Tinge of Colour to Black and White
+## Add a Tinge of Colour to Black and White (Tinted Neutrals)
 
-Some brands add subtle colour tinge to differentiate.
+Pure grey doesn't exist in nature - real shadows always have a colour cast. Adding a minimal tint of your brand colour to neutrals creates subconscious cohesion.
+
+```css
+/* Pure grays - feel "dead" */
+--gray-100: oklch(95% 0 0);
+--gray-900: oklch(15% 0 0);
+
+/* Tinted grays - feel alive */
+--gray-100: oklch(95% 0.01 250);  /* Tiny hint of blue */
+--gray-900: oklch(15% 0.01 250);
+```
+
+The chroma is tiny (0.01) but perceptible. Benefits:
 - Get benefits of black/white interface
+- Creates visual harmony with brand colour
 - Adjust mood with pinch of colour
 
 ## Use 1 Brand Colour
@@ -148,6 +161,41 @@ Avoid using for interactive elements to prevent conflicting meanings.
 - Use highest contrast colour for interactive elements
 - Use others sparingly for decorative elements
 - NEVER use more than one colour for interactive elements
+
+## Consider OKLCH for Modern Colour Systems
+
+OKLCH is a modern alternative to HSB/HSL that is "perceptually uniform" - equal numerical steps result in equal visual changes across all colours.
+
+**The HSL Problem:**
+- 50% lightness in yellow looks much brighter than 50% in blue
+- Darkening/lightening colours produces unexpected results
+- Hard to create consistent palettes
+
+**OKLCH Benefits:**
+- Predictable lightness across all hues
+- Better for generating colour variations
+- Easier to meet contrast requirements
+- Wide gamut support (P3 displays)
+- Browser support: Chrome 111+, Safari 15.4+, Firefox 113+
+
+```css
+/* OKLCH: lightness (0-100%), chroma (0-0.4+), hue (0-360) */
+--brand: oklch(60% 0.15 250);        /* Blue */
+--brand-light: oklch(85% 0.08 250);  /* Lighter - reduce chroma */
+--brand-dark: oklch(35% 0.12 250);   /* Darker */
+```
+
+**Tip:** When moving toward white or black, reduce chroma. High chroma at extreme lightness looks garish.
+
+## Consider the 60-30-10 Rule
+
+A guideline (not strict rule) for colour distribution from interior design:
+
+- **60%** - Dominant colour (backgrounds, white space)
+- **30%** - Secondary colours (text, borders, cards)
+- **10%** - Accent colour (CTAs, links, highlights)
+
+The accent colour works *because* it's rare. Overuse kills its impact. This is a helpful starting point, but context matters more than rigid proportions.
 
 ## Create a Colour Palette
 

@@ -114,6 +114,25 @@ Small:     14px / 20px line-height / regular
 ### Responsive Type Scales
 Switch to smaller scale on mobile to prevent text wrapping.
 
+### Fluid Typography with clamp()
+
+Use `clamp()` for font sizes that scale smoothly without breakpoints:
+
+```css
+/* clamp(minimum, preferred, maximum) */
+h1 {
+  font-size: clamp(24px, 5vw, 40px);
+  /* Min 24px, scales with viewport, max 40px */
+}
+```
+
+**Benefits:**
+- No hard jumps at breakpoints
+- Smooth scaling between screen sizes
+- Especially effective for headings
+
+**Note:** For UI elements like buttons and labels, fixed sizes often work better for consistency.
+
 ## Make Long Body Text Bigger
 
 Most websites have small text (designers prefer aesthetics).
@@ -164,6 +183,18 @@ Large text doesn't need 1.5 line height.
 - Don't use full page width for text
 - Align text block to left or centre of page
 - Especially important for long body text
+
+### Use ch Units for Line Length
+
+The `ch` unit equals the width of the "0" character in the current font. This makes the 40-80 character guideline directly implementable:
+
+```css
+.prose {
+  max-width: 65ch;  /* ~65 characters per line */
+}
+```
+
+This automatically adapts to different font sizes and typefaces.
 
 ## Left Align Text
 

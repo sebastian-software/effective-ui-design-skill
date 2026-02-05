@@ -256,11 +256,32 @@ Highlight confirmation in red to warn of destructive action.
 Red + checkbox that must be selected before action can occur.
 "Delete account? [checkbox] I confirm I want to delete my account"
 
-### Allow Undo
-Even with friction, mistakes happen.
-- Consider allowing undo/reverse
-- Takes more effort but removes a lot of risk
-- "Message deleted. [Restore message]"
+### Prefer Undo Over Confirmation Dialogs
+
+UX research shows confirmation dialogs are ineffective - users click through them automatically without reading. Undo is almost always better.
+
+**Undo pattern:**
+1. Execute action immediately
+2. Show toast: "Email deleted. [Undo]"
+3. Actually delete after toast expires (5-10 seconds)
+
+**Benefits:**
+- Doesn't interrupt workflow
+- Users don't have to think before acting
+- Mistakes are easily recoverable
+- Feels faster and more responsive
+
+**Use confirmation dialogs ONLY for:**
+- Truly irreversible actions (account deletion)
+- High-cost actions (payments)
+- Batch operations affecting many items
+
+**Example - Gmail style:**
+```
+"Message deleted. [Undo]"  ← Toast with undo option
+```
+
+Even with friction, mistakes happen. Undo removes a lot of risk while maintaining flow.
 
 ## Chapter Summary
 
