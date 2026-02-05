@@ -112,26 +112,45 @@ Small:     14px / 20px line-height / regular
 - Better for simpler interfaces, marketing sites
 
 ### Responsive Type Scales
-Switch to smaller scale on mobile to prevent text wrapping.
+
+Instead of just scaling individual font sizes, scale the **type scale ratio itself** based on viewport width:
+
+| Viewport | Scale Ratio | H1 | H2 | H3 | Body |
+|----------|-------------|----|----|-----|------|
+| 320px | 1.2 (Minor Third) | 35px | 29px | 24px | 17px |
+| 1024px | (interpolated) | 50px | 39px | 31px | 19px |
+| 1500px | 1.33 (Perfect Fourth) | 63px | 47px | 36px | 20px |
+
+**Why this works:**
+- Headings can be dramatically larger on desktop (63px H1) without being too big on mobile (35px)
+- The hierarchy stays proportional at all sizes
+- Smooth fluid interpolation - no breakpoint jumps
 
 ### Fluid Typography with clamp()
 
-Use `clamp()` for font sizes that scale smoothly without breakpoints:
+Use `clamp()` for font sizes that scale smoothly:
 
 ```css
 /* clamp(minimum, preferred, maximum) */
 h1 {
-  font-size: clamp(24px, 5vw, 40px);
-  /* Min 24px, scales with viewport, max 40px */
+  font-size: clamp(35px, 5vw + 1rem, 63px);
+}
+
+h2 {
+  font-size: clamp(29px, 4vw + 0.5rem, 47px);
+}
+
+.prose {
+  font-size: clamp(17px, 1.5vw + 0.5rem, 20px);
 }
 ```
 
 **Benefits:**
 - No hard jumps at breakpoints
 - Smooth scaling between screen sizes
-- Especially effective for headings
+- Headings get proportionally bigger with more space
 
-**Note:** For UI elements like buttons and labels, fixed sizes often work better for consistency.
+**Note:** For UI elements like buttons and labels, fixed sizes (14px) often work better for consistency.
 
 ## Distinguish UI Text from Body Text
 
