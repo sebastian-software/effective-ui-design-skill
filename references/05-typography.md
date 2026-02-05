@@ -80,14 +80,21 @@ body {
 
 **Browser support:** 83%+ (Chrome 127+, Firefox 118+, Safari 17+)
 
-## Use Regular and Bold Font Weights Only
+## Limit Font Weights and Ensure Clear Distinction
 
-Don't use all available weights - adds noise and clutter.
+Don't use all available weights - adds noise and clutter. More importantly: avoid weights that are too similar to distinguish.
+
+**Problematic combinations (too close together):**
+- Light vs Thin
+- Book vs Regular
+- Medium vs Regular
+- Semibold vs Bold
 
 **Guidelines:**
-- **Bold** - for headings to emphasise
-- **Regular** - for smaller text
+- Pick 2-4 weights with clear visual distinction
+- Common useful set: Regular (400), Medium (500), Bold (700)
 - Very thin or thick weights - headings/large text only (difficult at small sizes)
+- Each weight should serve a clear purpose in your hierarchy
 
 ## Use a Type Scale to Set Font Sizes
 
