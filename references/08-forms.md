@@ -291,6 +291,31 @@ If you can't break into steps, group related fields with headings.
 
 **If not decorative, needs sufficient contrast.**
 
+## Use 16px Minimum Font Size for Inputs on Mobile
+
+iOS Safari automatically zooms into input fields when font size is below 16px. This is intentional behaviour to ensure readability, but can be disorienting.
+
+**Solution:** Ensure input fields have at least 16px font size on mobile devices.
+
+```css
+/* Responsive approach */
+input, select, textarea {
+  font-size: 16px;  /* Prevents iOS zoom */
+}
+
+@media (min-width: 768px) {
+  input, select, textarea {
+    font-size: 14px;  /* Smaller on desktop if desired */
+  }
+}
+```
+
+**Common pattern (Tailwind):**
+- `text-sm` (14px) for labels and UI text
+- `text-base` (16px) for input fields on mobile
+
+**Do NOT disable zoom** via `maximum-scale=1` in the viewport meta tag - this breaks accessibility for users who need to zoom.
+
 ## Choose Your Form Validation Approach
 
 Even well-designed forms = people make mistakes.
