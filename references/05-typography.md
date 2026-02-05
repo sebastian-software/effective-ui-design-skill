@@ -137,9 +137,22 @@ h1 {
 
 Most websites have small text (designers prefer aesthetics).
 
-**Guideline:** Make long body text at least 18px.
+**Guideline:** Don't leave body text hard at 16px - scale it responsively.
 
-People read from ~arm's length away on all devices.
+- **Mobile:** 16-17px is often appropriate due to limited space
+- **Tablet/Desktop:** 18-20px when there's room to breathe
+- **Long-form content:** Err toward larger sizes for comfortable reading
+
+People read from ~arm's length away on all devices, but screen real estate varies. Use responsive typography:
+
+```css
+body {
+  font-size: clamp(16px, 2.5vw, 19px);
+  /* Scales smoothly from 16px to 19px based on viewport */
+}
+```
+
+The key insight: avoid *both* tiny text that strains eyes *and* oversized text that wastes mobile screen space.
 
 ## Use at Least 1.5 Line Height for Long Body Text
 
