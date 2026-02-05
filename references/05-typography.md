@@ -58,6 +58,28 @@ As you get more confident, try second typeface for HEADINGS ONLY.
 - Look for OpenType features
 - When in doubt, use default system typeface
 
+## Normalize Font Sizes with font-size-adjust
+
+Different fonts at the same `font-size` can appear vastly different in visual size due to varying x-heights (the height of lowercase letters). `font-size-adjust` normalizes this.
+
+**Use cases:**
+- **Fallback fonts:** Prevent layout shift when web fonts load
+- **Mixing fonts:** Make a serif heading font and sans-serif body font work together with one type scale
+
+```css
+/* The value is the x-height ratio (x-height / font-size) */
+body {
+  font-family: "Custom Font", Arial, sans-serif;
+  font-size-adjust: 0.5;  /* Normalize based on x-height */
+}
+```
+
+**How to find the value:**
+1. Measure your primary font's x-height ratio
+2. Apply it - fallback fonts will scale to match visually
+
+**Browser support:** 83%+ (Chrome 127+, Firefox 118+, Safari 17+)
+
 ## Use Regular and Bold Font Weights Only
 
 Don't use all available weights - adds noise and clutter.
