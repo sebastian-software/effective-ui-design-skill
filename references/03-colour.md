@@ -343,15 +343,32 @@ Fill:          4% opacity
 - Hover: Fill colour variation overlay
 - Press: Stroke weak colour variation overlay
 
-## Naming Colours
+## Colour Token Architecture
 
-### Primitive Colours
-All available colours, named by appearance. Format: `[colour.mode.number]`
+Use a 3-tier system for scalable, maintainable colour systems:
+
+```
+┌─────────────────────────────────────────────────────┐
+│  1. Raw Value         oklch(48% 0.2 162)            │
+│                       ↓                             │
+│  2. Primitive Colour  green.1000                    │
+│                       ↓                             │
+│  3. Semantic Colour   text.success                  │
+└─────────────────────────────────────────────────────┘
+```
+
+### 1. Raw Values
+The actual colour definition in OKLCH (or HSB/hex as fallback).
+- Only referenced by primitive tokens, never used directly in components
+- Easy to adjust globally
+
+### 2. Primitive Colours
+Named by appearance. Format: `[colour.mode.number]`
 - Number 0-1000 indicates contrast level (1000 = highest)
-- Example: `grey.light.1000`, `green.dark.800`
+- Examples: `grey.light.1000`, `green.dark.800`, `blue.500`
 
-### Semantic Colours (Tokens)
-Named based on how they should be used. Format: `[element.tone.emphasis.state]`
+### 3. Semantic Colours (Tokens)
+Named by usage - what the colour *does*. Format: `[element.tone.emphasis.state]`
 
 **Elements:** Text, Stroke, Icon, Fill, Background
 **Tones:** Neutral, Brand, Error, Warning, Success
@@ -359,9 +376,14 @@ Named based on how they should be used. Format: `[element.tone.emphasis.state]`
 **States:** Hover, Press, Focus, Disabled
 
 **Examples:**
-- `text.error` - error messages
-- `stroke.strong` - form field borders
-- `fill.success.weak` - success alert backgrounds
+- `text.success` → `green.1000` → `oklch(48% 0.2 162)`
+- `stroke.strong` → `grey.600` → `oklch(45% 0.01 250)`
+- `fill.error.weak` → `red.100` → `oklch(95% 0.05 25)`
+
+**Why this matters:**
+- Change `green.1000` once → all success states update
+- Swap themes by remapping semantic → primitive
+- Components only reference semantic tokens = consistent usage
 
 ## Adjust Photo Colour Temperature
 
