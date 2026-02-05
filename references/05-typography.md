@@ -133,24 +133,36 @@ h1 {
 
 **Note:** For UI elements like buttons and labels, fixed sizes often work better for consistency.
 
-## Make Long Body Text Bigger
+## Distinguish UI Text from Body Text
 
-Most websites have small text (designers prefer aesthetics).
+**UI text** (buttons, labels, navigation, table cells) and **body text** (articles, descriptions, long-form content) have different requirements.
 
-**Guideline:** Don't leave body text hard at 16px - scale it responsively.
+### UI Text: 14px is Fine
 
-- **Mobile:** 16-17px is often appropriate due to limited space
+For compact UI components, 14px works well and is common practice (Tailwind's base size):
+
+- Buttons, labels, navigation items
+- Table cells, form labels, badges
+- Sidebar content, metadata
+
+14px keeps UI components compact - important when combined with padding.
+
+### Body Text: Scale Responsively
+
+For long-form reading content, don't leave text hard at 16px - scale it:
+
+- **Mobile:** 16-17px is appropriate due to limited space
 - **Tablet/Desktop:** 18-20px when there's room to breathe
-- **Long-form content:** Err toward larger sizes for comfortable reading
-
-People read from ~arm's length away on all devices, but screen real estate varies. Use responsive typography:
 
 ```css
-body {
+.prose {
   font-size: clamp(16px, 2.5vw, 19px);
-  /* Scales smoothly from 16px to 19px based on viewport */
 }
 ```
+
+### Input Fields: 16px Minimum on Mobile
+
+iOS Safari auto-zooms inputs below 16px. See Forms chapter for details.
 
 The key insight: avoid *both* tiny text that strains eyes *and* oversized text that wastes mobile screen space.
 
