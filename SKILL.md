@@ -61,6 +61,8 @@ This skill enforces comprehensive UI design guidelines for creating professional
 - Never rely on colour alone to convey meaning
 - Use brand colour ONLY for interactive elements
 - Avoid pure black (#000000) on white - use dark grey instead
+- Use OKLCH for perceptually uniform palettes; derive variations with relative color syntax
+- Use `light-dark()` for theme switching without media query duplication
 
 ### Typography
 - Use single sans-serif typeface for most interfaces
@@ -75,6 +77,8 @@ This skill enforces comprehensive UI design guidelines for creating professional
 - Use 12-column grid for main layout
 - Align elements to create neat edges
 - Be generous with white space
+- Use container queries for component-level responsiveness; media queries for page-level layout
+- Use subgrid to align nested content across sibling elements (e.g. card grids)
 
 ### Buttons
 - Define 3 button weights: Primary, Secondary, Tertiary
@@ -91,6 +95,7 @@ This skill enforces comprehensive UI design guidelines for creating professional
 - Match field width to expected input
 - Use conventional form field styles
 - Display hints above fields (not below)
+- Use `:user-valid`/`:user-invalid` for validation that respects interaction timing
 
 ## Design Checklist
 
@@ -102,6 +107,7 @@ Before finalizing any UI design:
    - [ ] Colour is not the only indicator
    - [ ] Target areas are 48pt+ minimum
    - [ ] Text links are underlined
+   - [ ] Semantic HTML used (`<nav>`, `<main>`, `<search>`, landmarks)
 
 2. **Visual Hierarchy**
    - [ ] Clear order of importance
@@ -139,6 +145,8 @@ When creating UI code:
 3. Verify against the checklist above
 4. Use the predefined spacing scale (8pt increments)
 5. Use the colour palette structure from [references/03-colour.md](references/03-colour.md)
+6. Use the Popover API for tooltips, dropdowns, and menus (no JS library needed)
+7. Use `@starting-style` for CSS-only entry animations on dialogs and popovers
 
 ## Colour Palette Template
 
