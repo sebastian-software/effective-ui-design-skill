@@ -285,17 +285,14 @@ Interactive elements must change appearance when interacted with.
 Never remove focus indicators without replacement - it's an accessibility violation.
 
 ```css
-/* Hide focus ring for mouse clicks */
-button:focus {
-  outline: none;
-}
-
-/* Show focus ring for keyboard navigation */
-button:focus-visible {
+/* Show focus ring only for keyboard navigation (~96% support) */
+:focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
 ```
+
+Browsers that support `:focus-visible` automatically suppress focus rings on mouse/touch clicks. No need for a separate `:focus { outline: none }` rule.
 
 **Focus ring requirements:**
 - High contrast (3:1 minimum against adjacent colours)

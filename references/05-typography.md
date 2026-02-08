@@ -107,7 +107,7 @@ body {
 1. Measure your primary font's x-height ratio
 2. Apply it - fallback fonts will scale to match visually
 
-**Browser support:** 83%+ (Chrome 127+, Firefox 118+, Safari 17+)
+**Browser support:** ~90% (Chrome 127+, Firefox 118+, Safari 17+)
 
 ## Limit Font Weights and Ensure Clear Distinction
 
@@ -346,11 +346,19 @@ Plain justified text creates uneven word spacing and "rivers" of white space. If
 ```css
 .justified-prose {
   text-align: justify;
-  hyphens: auto;
-  hyphenate-limit-lines: 2;        /* Max 2 consecutive hyphenated lines */
+  hyphens: auto;                   /* 97% support — set lang attribute on <html> */
   hyphenate-limit-chars: 6 3 2;    /* Min 6 chars, 3 before break, 2 after */
-  hyphenate-limit-zone: 8%;        /* Only hyphenate if line is >92% full */
-  hyphenate-limit-last: always;    /* Never hyphenate last line of paragraph */
+}
+```
+
+**Fine-grained hyphenation controls** (`hyphenate-limit-lines`, `hyphenate-limit-zone`, `hyphenate-limit-last`) have limited browser support (~80%, no Safari). Use them as progressive enhancement:
+
+```css
+.justified-prose {
+  /* Progressive enhancement — ignored by browsers that don't support them */
+  hyphenate-limit-lines: 2;
+  hyphenate-limit-zone: 8%;
+  hyphenate-limit-last: always;
 }
 ```
 
@@ -541,29 +549,53 @@ At small sizes: increased x-height, wider spacing, thicker strokes for legibilit
 
 ### Hanging Punctuation for Display Text
 
-For large quoted text, pull punctuation into the margin so the text edge aligns visually:
+For large quoted text, pull punctuation into the margin so the text edge aligns visually. The CSS `hanging-punctuation` property exists but only Safari supports it (~14%). Use a negative `text-indent` instead:
 
 ```css
 blockquote.display {
-  text-indent: -0.4em;  /* Hang opening quote mark */
+  text-indent: -0.4em;  /* Hang opening quote mark — works everywhere */
 }
 ```
 
 ### Drop Caps
 
-Use `initial-letter` for drop caps at the opening of content sections:
+Use `initial-letter` for drop caps (~91% support, no Firefox). Provide a fallback for unsupported browsers:
 
 ```css
 .article > p:first-of-type::first-letter {
-  initial-letter: 3;  /* Span 3 lines */
+  /* Fallback for browsers without initial-letter */
+  float: left;
+  font-size: 3.2em;
+  line-height: 0.8;
   margin-right: 0.1em;
   font-weight: bold;
+}
+
+@supports (initial-letter: 3) {
+  .article > p:first-of-type::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    initial-letter: 3;  /* Span 3 lines */
+  }
 }
 ```
 
 ### Prevent Widows in Headings
 
-A single word on the last line of a heading looks orphaned. Prevent by inserting a non-breaking space (`&nbsp;`) between the last two words.
+A single word on the last line of a heading looks orphaned. Use CSS `text-wrap: balance` (~87% support) for headings and `text-wrap: pretty` (~78% support) for paragraphs:
+
+```css
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;  /* Equalises line lengths in headings */
+}
+
+p {
+  text-wrap: pretty;   /* Avoids orphan words on last line */
+}
+```
+
+For browsers without support, these properties degrade gracefully to normal wrapping. As an additional safeguard, insert `&nbsp;` between the last two words of critical headings.
 
 ## Vertical Rhythm
 

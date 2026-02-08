@@ -9,8 +9,7 @@ Link to font files using `@font-face`, specifying weight and style for each file
 ```css
 @font-face {
   font-family: 'MyFont';
-  src: url('myfont-regular.woff2') format('woff2'),
-       url('myfont-regular.woff') format('woff');
+  src: url('myfont-regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: fallback;
@@ -18,15 +17,14 @@ Link to font files using `@font-face`, specifying weight and style for each file
 
 @font-face {
   font-family: 'MyFont';
-  src: url('myfont-bold.woff2') format('woff2'),
-       url('myfont-bold.woff') format('woff');
+  src: url('myfont-bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: fallback;
 }
 ```
 
-**Always provide WOFF2 first** (30% smaller than WOFF) with WOFF as fallback. There is very little need to support older formats like EOT.
+**WOFF2 only.** With 97%+ browser support, WOFF2 is the only format you need. WOFF (without the "2") and older formats like EOT and TTF are no longer necessary — IE11, the last browser that needed them, has been discontinued.
 
 Fonts are only downloaded when needed — if no element on the page uses a declared `@font-face`, it won't be fetched.
 
@@ -104,7 +102,7 @@ This prevents the size jump when fonts swap, without needing JavaScript font eve
 
 ### Limit the Number of Fonts
 
-Each font file is typically 20–100 KB. A typical page might load 4-6 files (regular, bold, italic, bold-italic for body + display). Keep the total reasonable — every file is a network request.
+Each WOFF2 file is typically 15–70 KB. A typical page might load 4-6 files (regular, bold, italic, bold-italic for body + display). Keep the total reasonable — every file is a network request.
 
 ### Subset Your Fonts
 
@@ -190,9 +188,9 @@ body { font-family: "Calibri", "Roboto", sans-serif; }
 ```
 
 **Benefits:**
-- Works in browsers that don't support `font-display`
 - Enables matching fallback font sizes to reduce reflow
 - Can use session storage to skip FOUT on subsequent page loads
+- Gives precise control over the timing of font swaps
 
 ### Session Storage for Repeat Visits
 
@@ -218,9 +216,10 @@ The content is always more important than the typeface rendering it.
 
 ## Chapter Summary
 
-1. Use `font-display: fallback` to avoid invisible text during font loading
-2. Preload only your single most critical font file
-3. Choose fallback fonts that closely match your web font's metrics
-4. Subset fonts and use `unicode-range` for efficient loading
-5. Consider variable fonts for bandwidth savings and typographic flexibility
-6. Treat web fonts as progressive enhancement — content first, custom fonts second
+1. Use WOFF2 only — no need for WOFF or older format fallbacks
+2. Use `font-display: fallback` to avoid invisible text during font loading
+3. Preload only your single most critical font file
+4. Choose fallback fonts that closely match your web font's metrics
+5. Subset fonts and use `unicode-range` for efficient loading
+6. Consider variable fonts for bandwidth savings and typographic flexibility
+7. Treat web fonts as progressive enhancement — content first, custom fonts second
