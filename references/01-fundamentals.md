@@ -305,18 +305,72 @@ button:focus-visible {
 
 ## Animation and Motion
 
-### Respect Reduced Motion Preferences
+Animation adds context that static interfaces can't provide. It offloads spatial reasoning to the brain's visual cortex, reducing cognitive load and increasing perceived speed. But animation is a powerful tool that must be used purposefully — decorative animation wears on users after the fiftieth viewing.
 
-Vestibular disorders affect ~35% of adults over 40. Always respect the user's motion preferences:
+**The test for good animation:** If users notice your animation, it may be doing too much. Good microinteraction animations are seamless — users don't consciously register them, they just feel the interface is responsive and clear.
 
-```css
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
+### Animation Patterns
+
+Use these categories to identify and communicate the purpose of an animation:
+
+| Pattern | Purpose | Example |
+|---------|---------|---------|
+| **Transition** | Move users between places/tasks in the information space | Page-to-page slide, tab switching |
+| **Supplement** | Bring info on/off page without changing location or task | Tooltip appearing, dropdown opening |
+| **Feedback** | Connect user action to interface reaction | Button press ripple, form validation |
+| **Demonstration** | Show how something works instead of telling | Onboarding walkthrough, feature tour |
+| **Decoration** | Purely aesthetic, no new information | Background particle effects |
+
+**Prioritisation:** Transitions and feedback provide the most cognitive benefit. Decorations provide the least and risk annoying users. When resources are limited, prioritise animations that answer "What just happened?" for the user.
+
+**Questions to justify an animation:**
+- Does it show the user where information came from or went to?
+- Does it indicate progress?
+- Does it move the user through an information space?
+- Does it explain something faster than words could?
+
+### The Cone of Vision
+
+The eye is most sensitive to colour and detail at the centre (foveal region). Peripheral vision is blurry but highly sensitive to motion.
+
+**Practical implications:**
+- **Centre of vision:** Colour fades and small movements are sufficient to draw attention
+- **Peripheral vision:** Use motion to attract attention — colour changes alone may go unnoticed
+- Two independently moving objects on opposite sides of the screen cannot both be tracked
+- Overusing motion causes "banner blindness" — the brain learns to ignore excessive animacy
+
+### Easing (Timing Functions)
+
+Easing describes the rate of change over time. Different easings suit different situations:
+
+| Easing | CSS | Best For |
+|--------|-----|----------|
+| **Ease-out** (deceleration) | `ease-out` | User-initiated actions (clicks, taps). Feels snappy and responsive |
+| **Ease-in** (acceleration) | `ease-in` | System-initiated animations (alerts, pop-ups). Starts slowly, less startling |
+| **Ease-in-out** | `ease-in-out` | Moving elements toward each other |
+| **Linear** | `linear` | Fades and colour changes only. Motion with linear easing looks mechanical |
+
+For unique brand feel, use custom `cubic-bezier()` curves. Keep a chart of your project's easings to maintain consistency.
+
+### Duration (Timing Scale)
+
+Use a predefined set of durations for consistency, similar to a typographic scale:
+
 ```
+Immediate:  100ms  — Fades, colour changes under cursor/finger
+Fast:       300ms  — Button presses, toggles, responsive interactions
+Slower:     400ms  — Elements moving on page, dropdowns, tooltips
+Deliberate: 700ms  — Large movements across screen, demonstrations
+```
+
+These values follow a Fibonacci-like relationship (100 + 300 = 400, 300 + 400 = 700) creating natural harmony.
+
+**Guidelines:**
+- Colour/opacity changes under the cursor feel slow above 100ms
+- Moving elements across the page needs 300ms+ to track
+- Centre-of-vision animations need shorter durations (70-200ms)
+- Peripheral animations benefit from longer durations (300-700ms)
+- When in doubt, halve your duration — developers consistently overestimate how long animations should run
 
 ### Only Animate Transform and Opacity
 
@@ -336,6 +390,39 @@ For smooth 60fps animations, only animate `transform` and `opacity`. Other prope
 }
 ```
 
+A consistent frame rate matters more than a high one — a steady 30fps looks smoother than 60fps with dips.
+
+### Every Entrance Needs an Exit
+
+When something animates onto the screen, it must also animate as it leaves. Alerts that beautifully slide in but instantly vanish on dismissal make the interface feel unfinished. Invest in a system that waits for exit animations to complete before removing elements.
+
+### Avoid Flashes of Unloaded States (FOULS)
+
+When loading content dynamically, ensure users never see empty/unloaded pages:
+
+1. Start in a **loading state** (skeleton screens, shimmer placeholders)
+2. **Transition** loaded content in smoothly
+3. Never show the unloaded state — build with an "always be loading" mentality
+
+### Signal Oncoming Animations
+
+Anticipatory animation helps users mentally prepare. For example, hovering over a collapsible sidebar can cause it to slightly shift in the direction it will expand if clicked.
+
+### Respect Reduced Motion Preferences
+
+Vestibular disorders affect ~35% of adults over 40. Seizure-triggering animations can be dangerous — never flash elements more than twice per second.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+Replace motion-based animations with fades for users who prefer reduced motion — fades do not trigger vestibular disorders.
+
 ## Chapter Summary
 
 1. Minimise usability risk by keeping interfaces simple and familiar
@@ -343,3 +430,4 @@ For smooth 60fps animations, only animate `transform` and `opacity`. Other prope
 3. Minimise interaction cost and cognitive load as much as possible
 4. Create a design system of predefined styles, modular components, and usage guidelines
 5. Good accessibility means great usability - design for everyone
+6. Use animation purposefully to add context — prioritise transitions and feedback over decoration
