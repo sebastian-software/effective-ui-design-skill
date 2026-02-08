@@ -25,6 +25,42 @@ Unnecessary styles = those that don't convey information (purely decorative).
 - Decorative icons that could be confused for buttons
 - Very prominent icons that compete for attention
 
+## Replace Borders with Subtler Alternatives
+
+Borders add visual noise. When separating elements, try less prominent alternatives first.
+
+### Background Colours Instead of Borders
+
+Give input fields and section footers a subtle background colour instead of a border:
+```css
+/* Instead of border: 1px solid #ccc */
+background-color: hsl(210, 9%, 96%);
+```
+Creates visual distinction without the hard line.
+
+### Spacing Instead of Divider Lines
+
+Replace borders between list rows with increased padding:
+```css
+/* Instead of border-bottom: 1px solid #eee */
+padding: 12px 10px;
+```
+The whitespace between items provides enough separation.
+
+### Box Shadows Instead of Borders
+
+Give elevated elements (modals, dropdowns, cards) a subtle box-shadow instead of a border:
+```css
+/* Instead of border: 1px solid #ddd */
+box-shadow: 0 2px 6px 0 hsla(0, 0%, 0%, 0.2);
+```
+Feels more natural - mimics real-world depth rather than drawn-on outlines.
+
+### When to Keep Borders
+- Form fields still need visible borders for accessibility (3:1 contrast)
+- When background colours aren't distinct enough
+- When you need to indicate interactive boundaries
+
 **Style Trends Fade:**
 - Trendy effects age poorly
 - Minimal styles highlighting quality content are better for longevity
@@ -131,7 +167,8 @@ Mobile-first approach benefits:
 ## Chapter Summary
 
 1. Remove unnecessary information and styles to reduce cognitive load
-2. Reveal information gradually (progressive disclosure) to avoid overwhelming users
-3. Minimal ≠ Simple - don't remove critical information for aesthetics
-4. Ensure important content is visible or discoverable
-5. To help people decide faster: remove choices, group them, break into steps, or offer recommendations
+2. Replace borders with subtler alternatives (background colours, spacing, box-shadows)
+3. Reveal information gradually (progressive disclosure) to avoid overwhelming users
+4. Minimal ≠ Simple - don't remove critical information for aesthetics
+5. Ensure important content is visible or discoverable
+6. To help people decide faster: remove choices, group them, break into steps, or offer recommendations

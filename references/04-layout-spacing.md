@@ -228,6 +228,12 @@ Don't just design for short text and small numbers.
 - Keep components flexible for content reflow
 - Or decrease font sizes for long data
 
+**Account for translations:** Text can grow significantly in other languages. German and Portuguese translations can increase text length by up to 75% compared to English. Always test layouts with longer strings.
+
+**Quick text boundary tests:**
+- **Max height:** Use "Åy" - combines the tallest ascender (Å) and deepest descender (y) of most Latin typefaces
+- **Max width:** Fill with "WWW..." - W is the widest character in most fonts; if it fits, any other text will too
+
 **If hiding is necessary:**
 - Don't hide essential information
 - Consider cropping in middle (not end) to help differentiate items
@@ -260,6 +266,251 @@ Mathematical centering doesn't always look visually centered. Our eyes perceive 
 
 This is an advanced technique that requires a trained eye. When something looks "off" despite being mathematically correct, optical adjustment is usually the answer.
 
+### Nested Border Radii
+
+When an element with rounded corners contains another element with rounded corners (e.g. a card with a button inside), the outer radius should equal the inner radius plus the border/padding between them:
+
+```css
+/* outer radius = inner radius + gap between them */
+.card {
+  border-radius: 16px;  /* 8px + 8px padding */
+  padding: 8px;
+}
+.card-inner {
+  border-radius: 8px;
+}
+```
+
+Matching inner and outer radii produces corners that thicken awkwardly. Adding the gap creates a consistent, parallel curve.
+
+## Use Logical Properties
+
+Use `margin-inline-start/end` and `block-size` instead of `margin-left/right` and `height`. Logical properties honour writing direction and work correctly for RTL languages.
+
+```css
+/* Physical (fragile) */
+margin-left: 1rem;
+margin-right: 1rem;
+width: 100%;
+height: 50vh;
+
+/* Logical (robust) */
+margin-inline-start: 1rem;
+margin-inline-end: 1rem;
+inline-size: 100%;
+block-size: 50vh;
+```
+
+**Mapping (for horizontal-tb, ltr):**
+- `margin-left` → `margin-inline-start`
+- `margin-right` → `margin-inline-end`
+- `margin-top` → `margin-block-start`
+- `margin-bottom` → `margin-block-end`
+- `width` → `inline-size`
+- `height` → `block-size`
+- `padding-left` → `padding-inline-start`
+
+**Shorthand:** `margin-inline`, `margin-block`, `padding-inline`, `padding-block`
+
+## Apply box-sizing: border-box Globally
+
+Makes calculating box dimensions predictable - padding and border are included in the element's total size.
+
+```css
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+```
+
+Without this, a `300px` wide element with `20px` padding becomes `340px`. With `border-box`, the content area shrinks to accommodate padding within the `300px`.
+
+## Use Contextual Spacing (The Stack Pattern)
+
+Margin is a property of the *relationship* between two elements, not of an element itself. Style the context, not the individual element.
+
+```css
+/* Don't: margin on individual elements */
+p { margin-bottom: 1.5rem; }  /* Creates orphan margin on last element */
+
+/* Do: margin between adjacent siblings via parent */
+.stack > * + * {
+  margin-block-start: 1.5rem;
+}
+```
+
+The `* + *` selector (the "owl") only applies margin where an element is preceded by a sibling - no orphan margins.
+
+**Nested stacks for varied spacing:**
+```css
+.stack-lg > * + * { margin-block-start: 3rem; }
+.stack-sm > * + * { margin-block-start: 0.5rem; }
+```
+
+**Split a stack** to push elements apart (e.g. card footer to bottom):
+```css
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+.stack > :nth-child(2) {
+  margin-block-end: auto;  /* Pushes everything after this to the bottom */
+}
+```
+
+## Implement a CSS Modular Scale with Custom Properties
+
+Express your spacing scale as CSS custom properties derived from a single ratio. This creates visual harmony - all spacing values are mathematically related.
+
+```css
+:root {
+  --ratio: 1.5;
+  --s-2: calc(var(--s-1) / var(--ratio));
+  --s-1: calc(var(--s0) / var(--ratio));
+  --s0: 1rem;
+  --s1: calc(var(--s0) * var(--ratio));
+  --s2: calc(var(--s1) * var(--ratio));
+  --s3: calc(var(--s2) * var(--ratio));
+  --s4: calc(var(--s3) * var(--ratio));
+  --s5: calc(var(--s4) * var(--ratio));
+}
+```
+
+Use these everywhere: `padding: var(--s1)`, `gap: var(--s0)`, `margin-block-start: var(--s3)`. Change `--ratio` and the entire design scales harmoniously. The ratio of 1.5 mirrors a common `line-height` value, creating natural vertical rhythm.
+
+## Set a Global Measure Axiom
+
+Cap line length globally using an exception-based approach:
+
+```css
+* {
+  max-inline-size: 60ch;
+}
+html, body, div, header, nav, main, footer, section, aside {
+  max-inline-size: none;
+}
+```
+
+Container elements are excepted; text-bearing elements automatically get reasonable line lengths. Use a custom property for easy adjustment: `--measure: 60ch`.
+
+## Prefer Intrinsic Responsiveness Over Breakpoints
+
+Layouts that respond to their own content are more robust than layouts controlled by viewport breakpoints. Use CSS that *suggests* rather than *dictates* layout.
+
+### The Sidebar Pattern
+A sidebar that automatically stacks when space is tight:
+```css
+.with-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+.with-sidebar > :first-child {
+  flex-basis: 15rem;     /* sidebar width */
+  flex-grow: 1;
+}
+.with-sidebar > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;        /* takes remaining space */
+  min-inline-size: 50%;  /* forces wrap when too narrow */
+}
+```
+
+### The Switcher Pattern
+Switches between horizontal and vertical layout based on available space:
+```css
+.switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+}
+.switcher > * {
+  flex-grow: 1;
+  flex-basis: calc((30rem - 100%) * 999);
+  /* 30rem = threshold: above it → horizontal, below → vertical */
+}
+```
+
+### The Cluster Pattern
+Wrapping horizontal groups (tags, buttons, navigation):
+```css
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  align-items: center;
+}
+```
+
+### The Center Pattern
+Horizontally centered content with a max-width for readability:
+```css
+.center {
+  box-sizing: content-box;
+  max-inline-size: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--s1);
+}
+```
+
+### The Cover Pattern
+A vertically centered element within a minimum height container (hero sections):
+```css
+.cover {
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100vh;
+  padding: var(--s1);
+}
+.cover > * { margin-block: var(--s1); }
+.cover > .centered { margin-block: auto; }  /* Vertically centers this child */
+```
+
+### The Grid Pattern
+Auto-filling grid that adapts column count to available space:
+```css
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+  gap: var(--s1);
+}
+```
+The `min(250px, 100%)` prevents overflow on narrow screens.
+
+### The Frame Pattern
+Crop any content to an aspect ratio:
+```css
+.frame {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.frame > img,
+.frame > video {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+```
+
+## Use Relative Units for Accessible, Scalable Layouts
+
+Avoid `px` for font sizes - it overrides the user's browser font size preference.
+
+**When to use which unit:**
+- **rem** - Block-level sizing (font-size, margin, padding). Relative to root font size. Use for headings: `font-size: 2.5rem`
+- **em** - Inline/contextual sizing. Scales with parent. Use for icon sizing: `width: 0.75em; height: 0.75em`
+- **ch** - Line length (measure). `max-inline-size: 65ch`
+- **%** and **fr** - Flexible layouts. Grid tracks, flex-basis
+- **vw/vh** - Viewport-relative. Use sparingly with `calc()`: `font-size: calc(1rem + 0.5vw)`
+- **px** - Only for borders, shadows, and fine details that shouldn't scale
+
+**Scale the entire interface proportionally:**
+```css
+@media (min-width: 960px) {
+  :root { font-size: 125%; }
+}
+```
+All `rem`-based values scale automatically.
+
 ## Chapter Summary
 
 1. Group related elements using containers, proximity, similarity, or continuity
@@ -267,3 +518,7 @@ This is an advanced technique that requires a trained eye. When something looks 
 3. Interfaces = rectangles within rectangles with margin, padding, border (box model)
 4. Create predefined spacing options in 8pt increments; space based on relationship
 5. Align to 12-column grid; avoid multiple different alignments
+6. Use logical properties (`margin-inline-start`) instead of physical properties (`margin-left`)
+7. Use contextual spacing (Stack pattern with `* + *`) - style relationships, not individual elements
+8. Prefer intrinsic responsive patterns (flex-wrap, minmax) over @media breakpoints
+9. Use relative units (rem, em, ch) for accessible, scalable layouts

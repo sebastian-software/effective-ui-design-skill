@@ -176,6 +176,22 @@ Clearer: "Your email"
 Best: "Email"
 ```
 
+## Avoid Ambiguous Confirmation Labels
+
+Dialog buttons must be unambiguous when read alongside the question.
+
+```
+Bad:  "Do you wish to cancel this order?"  [OK] [Cancel]
+      → Does "Cancel" cancel the order, or cancel the cancel?
+
+Good: "Do you wish to cancel this order?"  [Yes] [No]
+
+Best: "Cancel this order?"  [Cancel order] [Keep order]
+      → Verb + noun removes all doubt
+```
+
+This is especially dangerous with destructive actions. If unsure, use the button text formula from the Buttons chapter: **verb + noun**.
+
 ## Use Vocabulary Consistently
 
 Use same word consistently for same element.

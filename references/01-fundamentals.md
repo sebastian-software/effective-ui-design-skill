@@ -10,6 +10,7 @@ Base design decisions on risk - the risk that someone could have difficulty usin
 - Thin, light grey text - some may find it difficult to read
 - Icons without labels - some might not understand what icons mean (especially those with cognitive/vision impairments)
 - Coloured headings - could be mistaken for links
+- Navigation with only arrows/dots (e.g. carousels) - use descriptive labels instead that tell users what content awaits them
 
 **Guidelines:**
 - Consider people with poor eyesight, low computer literacy, reduced dexterity and cognitive ability
@@ -141,6 +142,38 @@ Design interfaces that can be used by everyone, regardless of disability.
 - Meet WCAG 2.1 level AA as minimum
 - Include people with disabilities in usability testing
 
+### Use Semantic HTML
+
+Use meaningful HTML elements instead of generic `<div>` everywhere:
+
+```html
+<!-- Don't: ambiguous structure -->
+<div>
+  <div>Logo + Nav</div>
+  <div>
+    <div>Main content</div>
+    <div>Sidebar</div>
+  </div>
+  <div>Footer</div>
+</div>
+
+<!-- Do: clear structure -->
+<header>Logo + Nav</header>
+<nav>Navigation</nav>
+<main>
+  <section>Main content</section>
+  <aside>Sidebar</aside>
+</main>
+<footer>Footer</footer>
+```
+
+**Why it matters:**
+- Screen readers use semantic elements to navigate (jump to `<nav>`, skip to `<main>`)
+- Improves SEO and machine readability
+- Makes code self-documenting
+
+**Key elements:** `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`, `<figure>`, `<figcaption>`
+
 ### Assistive Technology
 
 **Screen Readers:**
@@ -158,6 +191,18 @@ Design interfaces that can be used by everyone, regardless of disability.
 - Anyone could get temporary disability (eye/arm injury)
 - Situational disabilities (bright sunny day affecting screen visibility)
 - Good accessibility = great usability
+
+## Design for Affordance
+
+Affordance is an object's ability to convey its function through its appearance. A raised button suggests pressing; a handle suggests pulling; text that flows off the edge suggests scrolling.
+
+**In digital design:**
+- Buttons should look tappable (depth, fill colour, hover states)
+- Scrollable areas should show partial content at the edges to hint at more
+- Draggable items should have grab handles or visual weight
+- Input fields should look like containers that accept text
+
+**The risk of flat design:** Removing all depth cues can make interfaces ambiguous. Ensure interactive elements are still distinguishable from static content through colour, weight, or shape.
 
 ## Use Common Design Patterns (Jakob's Law)
 

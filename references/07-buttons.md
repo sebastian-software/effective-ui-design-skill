@@ -242,7 +242,29 @@ If weight/size hard to match, use contrast for balance.
 - Make action less prominent
 - Move further away
 - Progressively disclose
-- DON'T colour red (makes more prominent)
+- DON'T use a red outline/border button (draws attention through colour but looks like a primary action)
+
+### Styling Destructive Buttons Correctly
+
+When a destructive button must be visible, use a filled background with muted tones - not a red outline:
+
+```css
+/* Don't: red outline/border draws attention wrong */
+.delete-btn-bad {
+  border: 1px solid red;
+  color: red;
+  background: white;
+}
+
+/* Do: muted filled background, same hue */
+.delete-btn {
+  background: hsl(0, 50%, 95%);  /* Light red - reduced saturation, high lightness */
+  color: hsl(0, 91%, 38%);       /* Dark red text */
+  border: none;
+}
+```
+
+**The principle:** Keep the same hue (red) but reduce saturation and increase lightness for the background. This makes the button clearly destructive without competing with the primary action.
 
 ### Light Friction (Less serious)
 Simple confirmation message.

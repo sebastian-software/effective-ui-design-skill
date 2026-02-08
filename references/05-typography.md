@@ -231,6 +231,20 @@ The key insight: avoid *both* tiny text that strains eyes *and* oversized text t
 - Darker/heavier typefaces = taller line height
 - Typefaces that look larger = taller line height
 
+## Set Paragraph Spacing to 1.5x Line Height
+
+The gap between paragraphs should be noticeably larger than the gap between lines within a paragraph. A reliable rule: set paragraph spacing (margin) to 1.5 times the line spacing.
+
+```css
+p {
+  line-height: 1.5;          /* 24px at 16px font-size */
+  margin-block-start: 0;
+  margin-block-end: 1.5em;   /* ~36px = 1.5 × 24px */
+}
+```
+
+This creates a clear visual break between paragraphs while keeping the text block cohesive. Keep paragraphs to roughly 5 lines max for comfortable reading.
+
 ## Decrease Line Height as Font Size Increases
 
 Large text doesn't need 1.5 line height.
@@ -300,6 +314,66 @@ Harder to follow, looks messy.
 - "Text type" typefaces designed for small sizes have wide letter spacing
 - "Display type" typefaces designed for large sizes - may not need adjustment
 
+## Use OpenType Features for Polished Typography
+
+Modern fonts contain advanced features that improve readability and professional appearance. Use CSS `font-variant` and `font-feature-settings` to activate them.
+
+### Small Caps
+
+Use for abbreviations and words set in uppercase inside body text so they blend in better. Always use real small caps - never fake them by scaling down capitals.
+
+```css
+/* Real small caps */
+.abbreviation {
+  font-variant-caps: all-small-caps;
+  font-feature-settings: "c2sc", "smcp";
+}
+```
+
+Fake small caps (scaled-down capitals) have thinner strokes and look out of place next to regular text.
+
+### Figure Styles
+
+Figure styles split into two groups:
+
+**Old-style vs Lining figures:**
+- **Old-style figures** have varying heights (some descend below baseline) - better for body text as they blend in
+- **Lining figures** are all the same height - better for headings and UI elements
+
+```css
+.body-text { font-variant-numeric: oldstyle-nums; }
+.ui-numbers { font-variant-numeric: lining-nums; }
+```
+
+**Proportional vs Tabular figures:**
+- **Proportional figures** have varying widths (natural spacing) - good for running text
+- **Tabular figures** all take the same horizontal space - essential for tables, prices, and anywhere numbers need to align vertically
+
+```css
+.price-table { font-variant-numeric: tabular-nums; }
+.prose       { font-variant-numeric: proportional-nums; }
+```
+
+### Ligatures
+
+**Common ligatures** (fi, fl, ff, ffl, ffi) improve legibility in body text. Enabled by default in most browsers - don't disable them.
+
+**Discretionary ligatures** are more ornamental. Use sparingly and only for decorative headings:
+```css
+.decorative-heading {
+  font-variant-ligatures: discretionary-ligatures;
+  font-feature-settings: "dlig";
+}
+```
+
+### Proper Punctuation
+
+Use the correct typographic marks:
+- **Hyphen** (-) connects words: "five-dollar"
+- **En dash** (\u2013) replaces "to": "6\u20135 p.m."
+- **Em dash** (\u2014) indicates a break in thought: "Why is typography important?\u200A\u2014\u200AIt can also be used as an indicator of a break."
+- **Curly quotation marks** (\u201c \u201d \u2018 \u2019) for prose - straight marks (' ") are for code only
+
 ## Ensure Text on Photos is Legible
 
 Common mistake: placing text directly on photos.
@@ -344,3 +418,4 @@ Common mistake: placing text directly on photos.
 3. Use 1.5+ line height for long body text; decrease line height as font size increases
 4. Ensure 40-80 characters per line for readability
 5. Left align text for optimal readability (F-pattern)
+6. Use OpenType features: real small caps, tabular figures for data, common ligatures, proper punctuation marks
