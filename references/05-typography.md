@@ -36,6 +36,15 @@ Safest for most interface designs.
 - Complicated typefaces = distracting, increased cognitive load
 - Less is more with typography
 
+### Choosing Functional Text Typefaces
+
+For UI/functional text (labels, captions, navigation, data), prioritise:
+- Open, distinct letterforms — capital I, lowercase l, and number 1 must be easily distinguishable
+- Large x-height for legibility at small sizes (but not so large that n and h become hard to tell apart)
+- Generous default letterspacing — don't compensate with `letter-spacing`; choose a correctly designed font
+- Sturdy weights — avoid light weights for UI text; thin strokes blur or dissolve at small sizes
+- Look for typefaces designed for signage or interfaces (e.g. Fira Sans, Source Sans, Roboto, Inter)
+
 ## Evoke Emotion Using a Second Typeface for Headings
 
 As you get more confident, try second typeface for HEADINGS ONLY.
@@ -47,6 +56,26 @@ As you get more confident, try second typeface for HEADINGS ONLY.
 - **Casual script** - personal, handmade
 - **Formal script** - formal, feminine, elegant
 - **Light sans serif** - chic, modern, luxurious
+
+### Combining Typefaces
+
+Limit to 2-3 typefaces maximum. Every typeface must serve a clear, distinct purpose (body, display, functional).
+
+**How to find good pairings:**
+1. **Start with an anchor** — choose your body text typeface first, then find companions that complement it
+2. **Match underlying structure** — pair typefaces with similar skeletons (e.g. both rational, both dynamic) but different expression
+3. **Use contrast for distinction** — pair serif with sans-serif, or light with heavy, to create clear hierarchy
+4. **Check similar metrics** — look for comparable x-heights, cap heights, and overall colour (density)
+5. **Try superfamilies first** — families with serif + sans-serif siblings (e.g. Questa Sans + Questa Serif) are guaranteed to harmonise
+6. **Consider same designer** — type designers leave personal stylistic thumbprints across their work
+
+**Avoid:** Pairing typefaces that are too similar (e.g. two geometric sans-serifs) — they create uncomfortable "almost the same" tension without clear distinction.
+
+### Workhorses vs Personalities
+
+**Workhorses** (Helvetica, Futura, Proxima Nova) are versatile but need skill to make distinctive. Look to display styles within their superfamily for variety.
+
+**Personalities** (typefaces with strong inherent character) do most of the work for you but suit fewer contexts. Favour personalities for display text — they make it easier to create distinctive designs.
 
 ## Tips for Choosing a Sans Serif Typeface
 
@@ -231,6 +260,20 @@ The key insight: avoid *both* tiny text that strains eyes *and* oversized text t
 - Darker/heavier typefaces = taller line height
 - Typefaces that look larger = taller line height
 
+### Always Use Unitless line-height Values
+
+Use unitless values (e.g. `1.5`) instead of units (e.g. `24px` or `1.5em`):
+
+```css
+/* Good - child elements compute their own line-height */
+body { line-height: 1.5; }
+
+/* Bad - computed value (e.g. 24px) is inherited, not the ratio */
+body { line-height: 1.5em; }
+```
+
+With unitless values, a child element with `font-size: 32px` will compute `line-height: 48px` (32 × 1.5). With `1.5em`, it inherits the parent's computed `24px`, causing lines to overlap.
+
 ## Set Paragraph Spacing to 1.5x Line Height
 
 The gap between paragraphs should be noticeably larger than the gap between lines within a paragraph. A reliable rule: set paragraph spacing (margin) to 1.5 times the line spacing.
@@ -296,23 +339,66 @@ English read left to right, downwards in F-pattern.
 - Eyes work harder to find start
 - OK for headings and short text
 
-### Don't Justify Long Body Text
-- Variations in letter/word spacing
-- Harder to distinguish text and follow lines
-- Especially hard for dyslexia
-- Creates distracting "rivers" of white space
+### Don't Justify Without Hyphenation
+
+Plain justified text creates uneven word spacing and "rivers" of white space. If you must justify:
+
+```css
+.justified-prose {
+  text-align: justify;
+  hyphens: auto;
+  hyphenate-limit-lines: 2;        /* Max 2 consecutive hyphenated lines */
+  hyphenate-limit-chars: 6 3 2;    /* Min 6 chars, 3 before break, 2 after */
+  hyphenate-limit-zone: 8%;        /* Only hyphenate if line is >92% full */
+  hyphenate-limit-last: always;    /* Never hyphenate last line of paragraph */
+}
+```
+
+**When justification can work:** Long-form content with generous measure (60+ characters), combined with hyphenation. Still not recommended for short lines or narrow columns.
+
+**When to avoid entirely:** Short text, narrow columns, dyslexia-sensitive contexts. Left-aligned text is always the safer default.
 
 ### Avoid Multiple Text Alignments
 Harder to follow, looks messy.
 
-## Decrease Letter Spacing for Large Text
+## Kerning and Letter Spacing
 
-**Letter spacing** = space between letters
+### Enable Kerning
 
-**Guidelines:**
-- Decrease letter spacing more as text gets bigger
-- "Text type" typefaces designed for small sizes have wide letter spacing
-- "Display type" typefaces designed for large sizes - may not need adjustment
+Kerning adjusts spacing between specific character pairs (e.g. AV, To, Wa). Always enable it:
+
+```css
+body {
+  font-kerning: normal;  /* Enable OpenType kerning */
+}
+```
+
+### Letter Spacing (Tracking) Guidelines
+
+**Decrease for large, bold, or wide text:**
+```css
+.display-heading {
+  letter-spacing: -0.02em;  /* Tighten large/bold text ~2-3% */
+}
+```
+
+**Increase for ALL CAPS and long digit strings:**
+```css
+.uppercase-label {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;  /* Open up ~5% for caps */
+}
+```
+
+**Turn off ligatures when letterspacing:**
+```css
+.spaced-text {
+  letter-spacing: 0.05em;
+  font-variant-ligatures: no-common-ligatures;  /* Ligatures look wrong when spaced */
+}
+```
+
+**Never letterspace lowercase** body text without good cause — it damages word shapes and reduces readability.
 
 ## Use OpenType Features for Polished Typography
 
@@ -366,13 +452,134 @@ Figure styles split into two groups:
 }
 ```
 
-### Proper Punctuation
+### Proper Punctuation and Typographic Marks
 
 Use the correct typographic marks:
 - **Hyphen** (-) connects words: "five-dollar"
 - **En dash** (\u2013) replaces "to": "6\u20135 p.m."
 - **Em dash** (\u2014) indicates a break in thought: "Why is typography important?\u200A\u2014\u200AIt can also be used as an indicator of a break."
 - **Curly quotation marks** (\u201c \u201d \u2018 \u2019) for prose - straight marks (' ") are for code only
+
+**Additional typographic marks:**
+- **Proper minus** (`&minus;` / −) for negative numbers — not a hyphen
+- **Proper ellipsis** (`&hellip;` / …) — one character, not three dots
+- **Multiplication** (`&times;` / ×) — not the letter x
+- **Non-breaking space** (`&nbsp;`) — between values and units (100 km), initials (J. K. Rowling), and between last two words of headings (prevents widows)
+- **Thin space** (`&thinsp;`) — between nested quotation marks and around em dashes
+
+## Prevent Faux Bold and Italic
+
+Browsers synthesise bold/italic when the required font file isn't loaded. Faux bold smears outlines; faux italic mechanically slants the roman. Both look wrong.
+
+```css
+/* Prevent browser synthesis - only use real font files */
+@font-face {
+  font-family: 'MyFont';
+  src: url('myfont-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* If you don't have an italic, explicitly prevent synthesis */
+.no-synthesis {
+  font-synthesis: none;
+}
+```
+
+**Always ensure you have font files for every weight and style you use.** If you specify `font-weight: bold` but only loaded the regular weight, the browser will fake it.
+
+## Table Typography
+
+Tables are text to be read — apply typographic care.
+
+**Number formatting:**
+- Use **tabular lining numerals** in data tables (equal-width digits that align vertically)
+- **Right-align numbers** so decimal points and digit places line up
+- **Left-align text** columns
+- Align column headings with their data (right-align headers above number columns)
+
+**Reduce visual clutter:**
+- Minimise borders, fills, and rules — use white space to separate rows and columns
+- Alternating row colours are rarely needed if spacing is adequate
+- Horizontal rules between rows are often sufficient; vertical rules almost never needed
+
+```css
+.data-table {
+  font-variant-numeric: tabular-nums lining-nums;
+  border-collapse: collapse;
+}
+
+.data-table td.number {
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+```
+
+## Display Text and Headlines
+
+### Sizing Display Text
+
+For display text that scales with the viewport, use `vmin` units for consistent sizing across portrait and landscape orientations:
+
+```css
+.hero-heading {
+  font-size: clamp(2rem, 8vmin, 5rem);
+}
+```
+
+### Optical Sizing
+
+Different sizes of text benefit from different font characteristics. Enable automatic optical sizing when available:
+
+```css
+body {
+  font-optical-sizing: auto;  /* Browser adjusts for rendered size */
+}
+```
+
+At small sizes: increased x-height, wider spacing, thicker strokes for legibility. At large sizes: finer details, tighter spacing, higher contrast for elegance.
+
+### Hanging Punctuation for Display Text
+
+For large quoted text, pull punctuation into the margin so the text edge aligns visually:
+
+```css
+blockquote.display {
+  text-indent: -0.4em;  /* Hang opening quote mark */
+}
+```
+
+### Drop Caps
+
+Use `initial-letter` for drop caps at the opening of content sections:
+
+```css
+.article > p:first-of-type::first-letter {
+  initial-letter: 3;  /* Span 3 lines */
+  margin-right: 0.1em;
+  font-weight: bold;
+}
+```
+
+### Prevent Widows in Headings
+
+A single word on the last line of a heading looks orphaned. Prevent by inserting a non-breaking space (`&nbsp;`) between the last two words.
+
+## Vertical Rhythm
+
+Use the body text line-height as the fundamental spacing unit. All vertical spacing — paragraph margins, heading spacing, padding — should be multiples of this base unit.
+
+```css
+:root {
+  --baseline: 1.5rem;  /* 24px if root is 16px */
+}
+
+h2 { margin-block: calc(var(--baseline) * 2) var(--baseline); }
+h3 { margin-block: calc(var(--baseline) * 1.5) calc(var(--baseline) * 0.5); }
+p  { margin-block: 0 var(--baseline); }
+```
+
+This creates a predictable, harmonious rhythm throughout the page. Embedded media (images, videos) may break the rhythm — that's acceptable; resume the rhythm after.
 
 ## Ensure Text on Photos is Legible
 
@@ -415,7 +622,11 @@ Common mistake: placing text directly on photos.
 
 1. Limit to regular and bold weights in single sans serif typeface for legibility, neutrality, simplicity
 2. Use type scale to create predefined font sizes that work together
-3. Use 1.5+ line height for long body text; decrease line height as font size increases
+3. Use 1.5+ line height (unitless values) for long body text; decrease line height as font size increases
 4. Ensure 40-80 characters per line for readability
-5. Left align text for optimal readability (F-pattern)
-6. Use OpenType features: real small caps, tabular figures for data, common ligatures, proper punctuation marks
+5. Left align text for optimal readability (F-pattern); only justify with hyphenation
+6. Enable kerning; tighten large text, open up ALL CAPS; turn off ligatures when letterspacing
+7. Use OpenType features: real small caps, tabular figures for data, common ligatures, proper typographic marks
+8. Prevent faux bold/italic — load all needed font weights and styles; use `font-synthesis: none`
+9. Apply vertical rhythm — use body line-height as base spacing unit
+10. Combine typefaces with purpose: match structure, contrast expression, limit to 2-3 families

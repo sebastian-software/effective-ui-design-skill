@@ -17,6 +17,7 @@ This skill enforces comprehensive UI design guidelines for creating professional
 | Colour | [references/03-colour.md](references/03-colour.md) |
 | Layout & Spacing | [references/04-layout-spacing.md](references/04-layout-spacing.md) |
 | Typography | [references/05-typography.md](references/05-typography.md) |
+| Web Fonts | [references/05b-webfonts.md](references/05b-webfonts.md) |
 | Copywriting | [references/06-copywriting.md](references/06-copywriting.md) |
 | Buttons | [references/07-buttons.md](references/07-buttons.md) |
 | Forms | [references/08-forms.md](references/08-forms.md) |
