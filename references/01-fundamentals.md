@@ -172,7 +172,21 @@ Use meaningful HTML elements instead of generic `<div>` everywhere:
 - Improves SEO and machine readability
 - Makes code self-documenting
 
-**Key elements:** `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`, `<figure>`, `<figcaption>`
+**Key elements:** `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>`, `<footer>`, `<figure>`, `<figcaption>`, `<search>`
+
+The `<search>` element (Baseline 2023) wraps any search or filtering interface — not just site search, but also filter controls on a results page:
+
+```html
+<search>
+  <form action="/search">
+    <label for="q">Search</label>
+    <input id="q" type="search" name="q">
+    <button type="submit">Search</button>
+  </form>
+</search>
+```
+
+It provides a semantic landmark that screen readers expose as a "search" role, letting users jump directly to it.
 
 ### Assistive Technology
 
@@ -393,6 +407,70 @@ A consistent frame rate matters more than a high one — a steady 30fps looks sm
 
 When something animates onto the screen, it must also animate as it leaves. Alerts that beautifully slide in but instantly vanish on dismissal make the interface feel unfinished. Invest in a system that waits for exit animations to complete before removing elements.
 
+### Use @starting-style for Entry Animations
+
+`@starting-style` (Baseline 2024) defines the initial state for CSS transitions when an element first appears — enabling entry animations without JavaScript. Previously, animating an element "from hidden to visible" required JS to add a class after insertion.
+
+```css
+dialog[open] {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms ease-out, transform 300ms ease-out;
+
+  @starting-style {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+```
+
+This is particularly useful for elements that toggle visibility: dialogs, popovers, tooltips, and notification toasts. Combine with `allow-discrete` to also transition `display: none`:
+
+```css
+.tooltip {
+  transition: opacity 200ms ease-out, display 200ms allow-discrete;
+  opacity: 1;
+
+  @starting-style { opacity: 0; }
+}
+.tooltip[hidden] {
+  opacity: 0;
+  display: none;
+}
+```
+
+### Use the Popover API for Tooltips, Dropdowns, and Menus
+
+The Popover API (Baseline 2025) provides native behaviour for floating UI elements — no JavaScript libraries needed for the basics:
+
+```html
+<button popovertarget="actions-menu">Actions</button>
+<div id="actions-menu" popover>
+  <ul role="menu">
+    <li><button>Edit</button></li>
+    <li><button>Duplicate</button></li>
+    <li><button>Delete</button></li>
+  </ul>
+</div>
+```
+
+**What the browser handles automatically:**
+- Renders in the **top layer** (no z-index wars)
+- **Dismisses on outside click** or Escape key
+- **Manages focus** — moves focus to the popover, returns it on close
+- Prevents background scrolling
+
+**When to use popover:**
+- Dropdown menus and action menus
+- Non-modal information panels
+- Notification toasts (combine with `popover="manual"` for persistent display)
+
+**When to use `<dialog>` instead:**
+- Modal dialogs that require user action before continuing
+- Confirmation prompts, form overlays
+
+Combine with `@starting-style` for animated entry/exit — the Popover API and `@starting-style` were designed to work together.
+
 ### Avoid Flashes of Unloaded States (FOULS)
 
 When loading content dynamically, ensure users never see empty/unloaded pages:
@@ -426,5 +504,6 @@ Replace motion-based animations with fades for users who prefer reduced motion �
 2. Every interface detail needs a logical reason behind it
 3. Minimise interaction cost and cognitive load as much as possible
 4. Create a design system of predefined styles, modular components, and usage guidelines
-5. Good accessibility means great usability - design for everyone
-6. Use animation purposefully to add context — prioritise transitions and feedback over decoration
+5. Good accessibility means great usability — use semantic HTML (`<search>`, landmarks) for screen readers
+6. Use animation purposefully — `@starting-style` enables CSS-only entry animations
+7. Use the Popover API for native tooltips, dropdowns, and menus without JS libraries

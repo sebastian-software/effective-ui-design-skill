@@ -187,6 +187,34 @@ OKLCH is a modern alternative to HSB/HSL that is "perceptually uniform" - equal 
 
 **Tip:** When moving toward white or black, reduce chroma. High chroma at extreme lightness looks garish.
 
+### Derive Colour Variations with Relative Color Syntax
+
+Relative color syntax (Baseline 2024) lets you derive new colours from existing ones — no manual calculations or preprocessors needed. Create hover states, tints, and shades programmatically:
+
+```css
+:root {
+  --brand: oklch(60% 0.15 250);
+
+  /* Darken for hover — reduce lightness by 15% */
+  --brand-hover: oklch(from var(--brand) calc(l - 0.1) c h);
+
+  /* Lighten for tint — increase lightness, reduce chroma */
+  --brand-tint: oklch(from var(--brand) 92% calc(c * 0.4) h);
+
+  /* Desaturate for disabled — reduce chroma */
+  --brand-disabled: oklch(from var(--brand) l calc(c * 0.3) h);
+
+  /* Shift hue for complementary — rotate 180° */
+  --accent: oklch(from var(--brand) l c calc(h + 180));
+}
+```
+
+**Why this matters for design systems:**
+- Define a single brand colour → derive the entire palette
+- Hover, active, and disabled states stay mathematically consistent
+- Changing the base colour cascades through all variations
+- Works with any colour space (`oklch`, `hsl`, `rgb`, etc.) — prefer OKLCH for perceptual uniformity
+
 ## Consider the 60-30-10 Rule
 
 A guideline (not strict rule) for colour distribution from interior design:
@@ -270,6 +298,46 @@ Background:   HSB(hue, 30, 10)
 - Start with white for Text strong
 - Gradually increase saturation, decrease brightness
 - Avoid pure black background
+
+### Use light-dark() for Theme Switching
+
+The `light-dark()` function (Baseline 2024) returns one of two colours based on the active colour scheme — eliminating the need for `@media (prefers-color-scheme)` queries on individual properties:
+
+```css
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  color: light-dark(oklch(20% 0.01 250), oklch(95% 0.01 250));
+  background: light-dark(#fff, oklch(15% 0.02 250));
+}
+
+.card {
+  background: light-dark(white, oklch(22% 0.015 250));
+  border-color: light-dark(oklch(90% 0.01 250), oklch(30% 0.02 250));
+}
+```
+
+**When to use `light-dark()`:**
+- Individual property values that differ between themes
+- Simpler and more readable than media query blocks for per-property changes
+
+**When to keep `@media (prefers-color-scheme)`:**
+- Structural changes (different layouts, different components per theme)
+- Swapping images or assets between themes
+
+**Combine with semantic tokens** for the best of both worlds — define tokens with `light-dark()`, reference tokens in components:
+
+```css
+:root {
+  color-scheme: light dark;
+  --text-strong: light-dark(oklch(20% 0.01 250), oklch(95% 0.01 250));
+  --text-weak: light-dark(oklch(40% 0.01 250), oklch(75% 0.01 250));
+  --bg: light-dark(#fff, oklch(15% 0.02 250));
+  --fill: light-dark(oklch(97% 0.005 250), oklch(22% 0.015 250));
+}
+```
 
 ## Add Depth Using Colour and Shadows
 
@@ -398,5 +466,7 @@ Not for product photos where realistic colours matter.
 1. Ensure text/UI elements have sufficient contrast; don't rely on colour alone
 2. Design in black and white first, then add colour purposefully (brand colour for interactive elements)
 3. Create small predefined colour palette with usage rules
-4. Consider transparent colours for consistent prominence across backgrounds
-5. Name colours systematically based on usage
+4. Use OKLCH for perceptually uniform palettes; derive variations with relative color syntax
+5. Use `light-dark()` for clean theme switching without media query duplication
+6. Consider transparent colours for consistent prominence across backgrounds
+7. Name colours systematically using a 3-tier token architecture

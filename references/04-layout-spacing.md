@@ -491,6 +491,74 @@ Crop any content to an aspect ratio:
 }
 ```
 
+## Use Container Queries for Component-Level Responsiveness
+
+Media queries respond to the *viewport*. Container queries (Baseline 2023) respond to the *parent container's* size — making components truly self-contained and reusable.
+
+```css
+/* 1. Declare a containment context */
+.card-container {
+  container-type: inline-size;
+}
+
+/* 2. Style based on the container's width, not the viewport */
+.card {
+  display: grid;
+  gap: var(--s0);
+}
+
+@container (min-width: 400px) {
+  .card {
+    grid-template-columns: 150px 1fr;
+  }
+}
+```
+
+**When to use container queries vs media queries:**
+- **Container queries** — component layout decisions (card layout, sidebar widget, embedded component). The component adapts to whatever space it's given, regardless of viewport size
+- **Media queries** — page-level layout decisions (number of columns, navigation style, overall page structure)
+
+**Practical principle:** If a component might appear in different contexts (full-width page, narrow sidebar, modal), it should use container queries. The same card component then works everywhere without overrides.
+
+Container queries support all the same syntax as media queries (`min-width`, `max-width`, ranges) and can be named for clarity:
+
+```css
+.sidebar { container: sidebar / inline-size; }
+
+@container sidebar (min-width: 300px) {
+  .widget { /* wider layout */ }
+}
+```
+
+## Use Subgrid for Consistent Nested Alignment
+
+Subgrid (Baseline 2023) lets child elements participate in their parent's grid tracks — solving the long-standing problem of aligning content across sibling cards.
+
+**The problem without subgrid:** When cards have varying content lengths, their internal elements (title, body, footer) don't align across the row. Each card's grid is independent.
+
+```css
+/* Parent grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--s1);
+}
+
+/* Each card inherits the parent's row tracks */
+.card {
+  display: grid;
+  grid-row: span 3;                  /* card spans 3 implicit row tracks */
+  grid-template-rows: subgrid;       /* inherit parent's row sizing */
+}
+```
+
+Now all cards' titles, bodies, and footers align horizontally across the row — even when content lengths differ. No fixed heights, no JavaScript measurement.
+
+**Use subgrid when:**
+- Cards or list items need their internal elements to align across a row
+- Form labels and inputs need to align across a grid
+- Any nested content needs to participate in the parent's track sizing
+
 ## Use Relative Units for Accessible, Scalable Layouts
 
 Avoid `px` for font sizes - it overrides the user's browser font size preference.
@@ -521,4 +589,6 @@ All `rem`-based values scale automatically.
 6. Use logical properties (`margin-inline-start`) instead of physical properties (`margin-left`)
 7. Use contextual spacing (Stack pattern with `* + *`) - style relationships, not individual elements
 8. Prefer intrinsic responsive patterns (flex-wrap, minmax) over @media breakpoints
-9. Use relative units (rem, em, ch) for accessible, scalable layouts
+9. Use container queries for component-level responsiveness; media queries for page-level layout
+10. Use subgrid to align nested content across sibling elements
+11. Use relative units (rem, em, ch) for accessible, scalable layouts

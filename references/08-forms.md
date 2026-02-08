@@ -371,6 +371,41 @@ Waits until typing stops, then validates (with delay).
 - Hard to know when typing is finished (different speeds)
 - More complex to implement
 
+### Use :user-valid and :user-invalid for CSS-Only Validation Feedback
+
+`:user-valid` and `:user-invalid` (Baseline 2023) solve the biggest problem with CSS form validation: premature error display. Unlike `:invalid` (which fires immediately, even before the user types anything), these pseudo-classes only activate *after the user has interacted* with the field.
+
+```css
+/* No red borders on page load — only after user interaction */
+input:user-invalid {
+  border-color: var(--error);
+  background: var(--error-fill);
+}
+
+input:user-valid {
+  border-color: var(--success);
+}
+```
+
+**Why this matters:**
+- `:invalid` marks empty required fields as errors on page load — frustrating and distracting
+- `:user-invalid` waits until the user has attempted to fill the field, then shows feedback
+- Works with HTML validation attributes (`required`, `pattern`, `type="email"`, `min`, `max`)
+- Reduces JavaScript needed for basic validation timing
+
+**Combine with HTML validation** for zero-JavaScript inline validation:
+
+```html
+<label for="email">Email *</label>
+<input id="email" type="email" required>
+<!-- :user-invalid activates after user types an invalid email and leaves the field -->
+```
+
+**Still use JavaScript for:**
+- Custom validation messages (the native browser messages are ugly and inconsistent)
+- Server-side validation (username availability, etc.)
+- Multi-field validation (password confirmation)
+
 ## Chapter Summary
 
 1. Single column layout maintains consistent downward momentum
@@ -378,3 +413,4 @@ Waits until typing stops, then validates (with delay).
 3. Match field width to intended input
 4. Consider radio buttons, autocomplete, or steppers instead of dropdowns
 5. Break long forms into multiple smaller steps
+6. Use `:user-valid`/`:user-invalid` for CSS validation that respects user interaction timing
