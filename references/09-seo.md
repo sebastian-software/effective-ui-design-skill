@@ -70,6 +70,96 @@ Tells search engines which URL is the "official" version when content is accessi
 
 `x-default` specifies the fallback for users whose language is not covered.
 
+## Favicons
+
+Modern browsers need far fewer favicon files than older guides suggest. Instead of serving dozens of icons, all you need is five icons and one JSON file.
+
+### The Five Icons
+
+| File | Size | Purpose |
+|------|------|---------|
+| `favicon.ico` | 32×32 | Fallback for older browsers |
+| `icon.svg` | scalable | Modern browsers — supports dark mode |
+| `apple-touch-icon.png` | 180×180 | iOS home screen bookmark |
+| `icon-192.png` | 192×192 | PWA install icon |
+| `icon-512.png` | 512×512 | PWA splash screen |
+
+### HTML Markup
+
+```html
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+```
+
+For Progressive Web Apps, also add a manifest link:
+
+```html
+<link rel="manifest" href="/manifest.webmanifest">
+```
+
+### SVG Favicon with Dark Mode
+
+SVG favicons can adapt to the user's colour scheme using an embedded media query. This is particularly useful for monochrome logos.
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .icon { fill: #1a1a1a }
+    @media (prefers-color-scheme: dark) {
+      .icon { fill: #ffffff }
+    }
+  </style>
+  <path class="icon" d="..." />
+</svg>
+```
+
+**Browser notes:**
+- Safari does not render SVG favicons — it falls back to `.ico`
+- Chrome requires a tab reload to reflect colour scheme changes
+- Firefox handles dark mode switching correctly without reload
+
+Serve SVG favicons with the correct MIME type: `image/svg+xml`.
+
+### Web Manifest for PWAs
+
+Use `.webmanifest` as the file extension. The manifest includes three icons: a 192×192 install icon, a 512×512 maskable icon, and a 512×512 standard icon.
+
+```json
+{
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-mask.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}
+```
+
+Maskable icons (adaptive icon shapes on Android) should have bigger paddings. The safe zone is a 409×409 circle within the 512×512 canvas. Use [maskable.app](https://maskable.app) to verify your icon.
+
+### What Is Outdated
+
+Do not generate or include these — they add complexity without benefit:
+
+- Multiple PNG sizes (16×16, 24×24, 32×32, 48×48, 64×64) — browsers downscale the SVG or 180px PNG
+- Multiple Apple touch icon sizes (57, 72, 76, 114, 120, 144, 152) — 180×180 covers all devices
+- `browserconfig.xml` and `mstile-*.png` — Windows tiles are no longer relevant
+- `rel="shortcut icon"` — the `shortcut` keyword is non-standard and unnecessary
+- `type="image/x-icon"` on `.ico` links — browsers detect the format automatically
+- Inline base64-encoded favicons — larger payload, not cacheable
+
+### Generating Favicons
+
+Start from a single SVG source file:
+
+1. **SVG favicon** — use the source SVG directly (add dark mode styles if needed)
+2. **ICO file** — export at 32×32 from the SVG (tools: sharp + sharp-ico, ImageMagick, or Inkscape)
+3. **Apple touch icon** — export PNG at 180×180 with appropriate padding
+4. **PWA icons** — export PNGs at 192×192 and 512×512
+5. **Maskable icon** — export PNG at 512×512 with extra padding so content fits within 409×409 safe zone
+
+Source: [How to Favicon in 2024: Six files that fit most needs](https://evilmartians.com/chronicles/how-to-favicon-in-2021-six-files-that-fit-most-needs) by Evil Martians (continuously updated — current title: "Five icons and a JSON file").
+
 ## Open Graph and Social Metadata
 
 When a URL is shared on social media, the platform scrapes Open Graph tags to build the preview card. Without them, platforms guess — and guess poorly.
@@ -433,3 +523,4 @@ Many performance optimisations are covered across other chapters. This is a cros
 8. Meet Core Web Vitals targets: LCP < 2.5s, INP < 200ms, CLS < 0.1
 9. Link important pages within 3 clicks of the homepage with descriptive anchor text
 10. Keep URLs lowercase, hyphenated, short, and descriptive
+11. Use five favicon files: `favicon.ico` (32×32), `icon.svg` (with dark mode), `apple-touch-icon.png` (180×180), `icon-192.png`, `icon-512.png` — add `manifest.webmanifest` with `icon-mask.png` (maskable) for PWAs

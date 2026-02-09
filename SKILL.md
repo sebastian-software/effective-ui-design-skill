@@ -122,6 +122,13 @@ Enforces professional UI design guidelines for accessible, well-structured inter
 - Descriptive, hyphenated image file names and natural alt text
 - Meet Core Web Vitals: LCP < 2.5s, INP < 200ms, CLS < 0.1
 
+### Favicons
+- Five icons: `favicon.ico` (32×32), `icon.svg` (with dark mode), `apple-touch-icon.png` (180×180), `icon-192.png`, `icon-512.png`
+- SVG favicons support `@media (prefers-color-scheme: dark)` for automatic dark mode
+- For PWAs: add `manifest.webmanifest` with `icon-192.png`, `icon-mask.png` (512×512, maskable), and `icon-512.png`
+- Maskable icons need extra padding — safe zone is a 409×409 circle
+- Do not generate multiple PNG sizes, multiple Apple touch icon sizes, or `browserconfig.xml`
+
 ## Design Checklist
 
 Before finalizing any UI design:
@@ -175,6 +182,8 @@ Before finalizing any UI design:
    - [ ] JSON-LD structured data where applicable
    - [ ] Descriptive image file names and alt text
    - [ ] LCP image not lazy-loaded, has `fetchpriority="high"`
+   - [ ] Favicons: `favicon.ico`, `icon.svg` (with dark mode), `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`
+   - [ ] PWA: `manifest.webmanifest` with `icon-192.png`, `icon-mask.png` (maskable), `icon-512.png`
 
 ## Implementation
 
