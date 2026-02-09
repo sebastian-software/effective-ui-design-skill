@@ -4,6 +4,27 @@ You've seen it happen: Claude Code generates a form with thin gray text, buttons
 
 This [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill stops that cycle. Install it once, and every UI task follows professional design guidelines automatically. No reminding, no repeating yourself.
 
+## How this differs from Anthropic's frontend-design skill
+
+Anthropic ships a [frontend-design](https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial/Anthropic%201P/skill-frontend-design) skill that handles creative direction: picking a bold aesthetic, choosing distinctive fonts, avoiding generic "AI look" output. It's good at that.
+
+It doesn't touch the technical side. No contrast ratios, no spacing system, no form patterns, no accessibility rules, no SEO. A visually striking page that fails WCAG or ships without meta tags is still a problem.
+
+This skill covers that layer. Concrete values, not creative direction:
+
+| This skill | Anthropic's skill |
+|---|---|
+| WCAG 2.1 AA contrast (4.5:1 text, 3:1 UI) | No contrast requirements |
+| OKLCH palettes, `light-dark()`, relative color syntax | "Cohesive palette" (no method specified) |
+| 8pt spacing grid, container queries, subgrid | "Generous negative space" (no system) |
+| Fluid typography with `clamp()`, type scale, vertical rhythm | "Choose distinctive fonts" (no sizing rules) |
+| Form validation, `:user-valid`/`:user-invalid`, field sizing | Not covered |
+| Button hierarchy, target sizes, destructive action patterns | Not covered |
+| Dark mode, reduced motion, screen reader support | Not covered |
+| SEO meta tags, JSON-LD, Core Web Vitals | Not covered |
+
+They work together. Use Anthropic's skill for the mood. Use this one to make sure the result actually works for every user.
+
 ## The problem
 
 Claude Code has no design opinion. Without guidance it defaults to:
@@ -37,7 +58,7 @@ Built on 20+ years of shipping web interfaces. Updated for modern CSS (Baseline 
 
 ## What it doesn't do
 
-This isn't a component library or a CSS framework. It doesn't generate design tokens or output Figma files. It's a set of rules that shape how Claude Code thinks about UI, so the code it writes starts closer to where you'd end up anyway.
+This isn't a component library or a CSS framework. It doesn't pick your aesthetic direction or choose fonts for you. It's the technical layer underneath: the spacing, contrast, accessibility, and patterns that need to be right regardless of how the interface looks.
 
 ## Install
 
