@@ -388,6 +388,8 @@ The `* + *` selector (the "owl") only applies margin where an element is precede
 
 ## Implement a CSS Modular Scale with Custom Properties
 
+**Modular scale vs 8pt grid:** The 8pt spacing scale (XS–XXL) is the primary system for component and layout spacing. The modular scale is an alternative for typography-driven layouts where all spacing derives from the type scale ratio. Pick one per project — don't mix both or spacing decisions become ambiguous.
+
 Express your spacing scale as CSS custom properties derived from a single ratio. This creates visual harmony - all spacing values are mathematically related.
 
 ```css
