@@ -755,15 +755,18 @@ Anticipatory animation helps users mentally prepare. For example, hovering over 
 Vestibular disorders affect ~35% of adults over 40. Seizure-triggering animations can be dangerous — never flash elements more than twice per second.
 
 ```css
+/* Safety net: disable all motion by default */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation: none;
+    transition: none;
   }
 }
 ```
 
-Replace motion-based animations with fades for users who prefer reduced motion — fades do not trigger vestibular disorders.
+No `!important` — this allows more specific selectors (dialogs, view transitions, popovers) to override with safe opacity fades. WCAG 2.3.3 explicitly excludes opacity changes from "motion animation", so fades do not trigger vestibular disorders.
+
+Replace motion-based animations with fades where a visual signal is still needed:
 
 ### View Transitions API
 
