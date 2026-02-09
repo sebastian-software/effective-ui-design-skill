@@ -185,16 +185,16 @@ When creating UI code:
 7. Use `@starting-style` for CSS-only entry animations on dialogs and popovers
 8. Use the View Transition API for page transitions and shared element animations; always respect `prefers-reduced-motion`
 
-## Colour Palette Template
+## Colour Palette Template (OKLCH)
 
 ```
-Brand:        HSB(hue, 65, 85)     - Interactive elements
-Text strong:  HSB(hue, 57, 24)     - Headings, primary text (4.5:1+ contrast)
-Text weak:    HSB(hue, 27, 48)     - Secondary text (4.5:1+ contrast)
-Stroke strong: HSB(hue, 23, 65)    - Form borders, icons (3:1+ contrast)
-Stroke weak:  HSB(hue, 5, 94)      - Decorative borders
-Fill:         HSB(hue, 2, 98)      - Secondary backgrounds
-Background:   HSB(0, 0, 100)       - White or near-white
+Brand:         oklch(60% 0.15 hue)     - Interactive elements
+Text strong:   oklch(25% 0.02 hue)     - Headings, primary text (4.5:1+)
+Text weak:     oklch(45% 0.02 hue)     - Secondary text (4.5:1+)
+Stroke strong: oklch(58% 0.02 hue)     - Form borders, icons (3:1+)
+Stroke weak:   oklch(92% 0.005 hue)    - Decorative borders
+Fill:          oklch(97% 0.003 hue)    - Secondary backgrounds
+Background:    oklch(100% 0 0)         - White or near-white
 ```
 
 ## Typography Scale (1.200 Minor Third)

@@ -229,33 +229,35 @@ The accent colour works *because* it's rare. Overuse kills its impact. This is a
 
 Small set of predefined colours with rules governing usage.
 
-### 5 Colour Variations (Solid Palette)
+### 7 Colour Variations (Solid Palette — OKLCH)
 
 ```
-Brand:        HSB(hue, 65, 85)     - Interactive elements
-              Must have 4.5:1 against fill
+Brand:         oklch(60% 0.15 hue)     - Interactive elements
+               Must have 4.5:1 against fill
 
-Text strong:  HSB(hue, 57, 24)     - Headings, primary text
-              Very dark grey with brand tinge
-              Must have 4.5:1 against fill
+Text strong:   oklch(25% 0.02 hue)     - Headings, primary text
+               Very dark grey with brand tinge
+               Must have 4.5:1 against fill
 
-Text weak:    HSB(hue, 27, 48)     - Secondary text
-              Dark grey with brand tinge
-              Must have 4.5:1 against fill
+Text weak:     oklch(45% 0.02 hue)     - Secondary text
+               Dark grey with brand tinge
+               Must have 4.5:1 against fill
 
-Stroke strong: HSB(hue, 23, 65)    - Form borders, icons
-              Medium grey with brand tinge
-              Must have 3:1 against fill
+Stroke strong: oklch(58% 0.02 hue)     - Form borders, icons
+               Medium grey with brand tinge
+               Must have 3:1 against fill
 
-Stroke weak:  HSB(hue, 5, 94)      - Decorative borders
-              Light grey with brand tinge
-              No contrast requirement (decorative only)
+Stroke weak:   oklch(92% 0.005 hue)    - Decorative borders
+               Light grey with brand tinge
+               No contrast requirement (decorative only)
 
-Fill:         HSB(hue, 2, 98)      - Secondary backgrounds
-              Very light grey with brand tinge
+Fill:          oklch(97% 0.003 hue)    - Secondary backgrounds
+               Very light grey with brand tinge
 
-Background:   HSB(0, 0, 100)       - White
+Background:    oklch(100% 0 0)         - White
 ```
+
+Verify contrast with tools like [oklch.fyi](https://oklch.fyi/) or Chrome DevTools — maximum chroma varies by hue, so adjust values per project.
 
 ### Interaction States
 
@@ -280,16 +282,16 @@ Background:   HSB(0, 0, 100)       - White
 - Move button up slightly on hover
 - Keep subtle and quick
 
-## Dark Colour Palette
+## Dark Colour Palette (OKLCH)
 
 ```
-Brand:        HSB(hue, 40, 99)
-Text strong:  HSB(hue, 0, 100)     - White
-Text weak:    HSB(hue, 5, 85)
-Stroke strong: HSB(hue, 10, 65)
-Stroke weak:  HSB(hue, 15, 25)
-Fill:         HSB(hue, 20, 15)
-Background:   HSB(hue, 30, 10)
+Brand:         oklch(78% 0.12 hue)
+Text strong:   oklch(98% 0 0)          - White
+Text weak:     oklch(80% 0.01 hue)
+Stroke strong: oklch(58% 0.02 hue)
+Stroke weak:   oklch(25% 0.03 hue)
+Fill:          oklch(18% 0.02 hue)
+Background:    oklch(13% 0.03 hue)
 ```
 
 **Tips:**
@@ -430,7 +432,7 @@ Use a 3-tier system for scalable, maintainable colour systems:
 ```
 
 ### 1. Raw Values
-The actual colour definition in OKLCH (or HSB/hex as fallback).
+The actual colour definition in OKLCH (or hex as fallback).
 - Only referenced by primitive tokens, never used directly in components
 - Easy to adjust globally
 
