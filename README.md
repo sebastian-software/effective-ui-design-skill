@@ -1,12 +1,26 @@
 # Effective UI Design
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that applies UI design guidelines whenever you work on frontend code. Distilled from 20+ years of building web interfaces, updated for modern CSS (Baseline 2023-2025) and current accessibility standards.
+You've seen it happen: Claude Code generates a form with thin gray text, buttons that all look the same, and spacing that feels random. You fix it, move on, and next time it happens again.
 
-Claude Code tends to produce generic, unstyled interfaces unless you tell it otherwise. This skill fixes that. It enforces consistent spacing, contrast ratios, typography, and layout patterns across everything it generates — without you having to repeat yourself.
+This [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill stops that cycle. Install it once, and every UI task follows professional design guidelines automatically. No reminding, no repeating yourself.
 
-## What it covers
+## The problem
 
-| Topic | What's in there |
+Claude Code has no design opinion. Without guidance it defaults to:
+
+- Text that fails WCAG contrast requirements
+- Buttons with no visual hierarchy (everything looks equally important)
+- Forms with no validation feedback or sensible field sizing
+- Arbitrary spacing with no system behind it
+- No consideration for dark mode, reduced motion, or screen readers
+
+You can fix this per-prompt, but that gets old after the third time.
+
+## What this changes
+
+The skill loads 10 reference files covering the decisions you'd otherwise make by hand:
+
+| Topic | What it handles |
 |-------|----------------|
 | [Fundamentals](references/01-fundamentals.md) | Interaction cost, cognitive load, affordance, animation, reduced motion, semantic HTML |
 | [Less is more](references/02-less-is-more.md) | Progressive disclosure, mobile-first, when to remove rather than add |
@@ -18,6 +32,12 @@ Claude Code tends to produce generic, unstyled interfaces unless you tell it oth
 | [Buttons](references/07-buttons.md) | Primary/secondary/tertiary weights, destructive actions, undo over confirmation |
 | [Forms](references/08-forms.md) | Single column layout, validation with `:user-valid`/`:user-invalid`, dropdowns vs alternatives |
 | [SEO](references/09-seo.md) | Meta tags, structured data (JSON-LD), Core Web Vitals, internal linking |
+
+Built on 20+ years of shipping web interfaces. Updated for modern CSS (Baseline 2023-2025) and current accessibility standards.
+
+## What it doesn't do
+
+This isn't a component library or a CSS framework. It doesn't generate design tokens or output Figma files. It's a set of rules that shape how Claude Code thinks about UI, so the code it writes starts closer to where you'd end up anyway.
 
 ## Install
 
@@ -31,7 +51,7 @@ Or via HTTPS:
 git clone https://github.com/sebastian-software/effective-ui-design-skill.git ~/.claude/skills/effective-ui-design
 ```
 
-The skill activates automatically when Claude Code works on UI or frontend tasks.
+One command. The skill activates automatically whenever Claude Code works on frontend tasks. Nothing to configure.
 
 ## License
 
