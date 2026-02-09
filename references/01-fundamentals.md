@@ -109,6 +109,37 @@ XXL: 80pt  - Page section padding
 - Medium: 16pt
 - Large: 32pt
 
+**Icon Options:**
+- Use SVG icons exclusively — never emoji, bitmap icons, or icon fonts
+- Pick one icon set and use it consistently (e.g. Lucide, Heroicons, Phosphor)
+- Default size: `1.5rem` (24px) for UI icons, `1rem` (16px) for inline icons
+- Use `currentColor` so icons inherit the parent's text colour
+- Match stroke width to the surrounding font weight (2px stroke ≈ regular weight, 2.5px ≈ bold)
+
+```html
+<!-- Decorative icon (label provides meaning) -->
+<button>
+  <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2">
+    <path d="..."/>
+  </svg>
+  Save post
+</button>
+
+<!-- Standalone icon (icon IS the label) -->
+<button aria-label="Close dialog">
+  <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor" stroke-width="2">
+    <path d="..."/>
+  </svg>
+</button>
+```
+
+**Icon accessibility rules:**
+- Icons next to text: add `aria-hidden="true"` to the SVG (the text is the label)
+- Icon-only buttons: add `aria-label` to the button (not to the SVG)
+- Never use icons without a visible text label unless space is extremely limited — always prefer icon + text over icon alone
+
 ### 2. Create Reusable Modules
 
 - Start with smallest components (buttons, avatars, form inputs)

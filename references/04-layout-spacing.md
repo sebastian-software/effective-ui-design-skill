@@ -491,6 +491,99 @@ Crop any content to an aspect ratio:
 }
 ```
 
+## Responsive Images
+
+Images are often the heaviest assets on a page. Use modern HTML attributes to serve the right image at the right size without layout shifts.
+
+### Prevent Layout Shift with aspect-ratio
+
+When an image loads, the browser doesn't know its dimensions until the file arrives — causing content below to jump. Reserve space upfront:
+
+```html
+<img src="hero.webp" alt="..." width="1200" height="675"
+     loading="lazy" decoding="async">
+```
+
+The `width` and `height` attributes let modern browsers calculate the aspect ratio before loading. For CSS-controlled sizing, use `aspect-ratio` explicitly:
+
+```css
+.hero-image {
+  aspect-ratio: 16 / 9;
+  inline-size: 100%;
+  object-fit: cover;
+}
+```
+
+### Serve Responsive Sizes with srcset
+
+Don't send a 2400px image to a 375px phone. Use `srcset` and `sizes` to let the browser choose:
+
+```html
+<img
+  src="photo-800.webp"
+  srcset="photo-400.webp 400w,
+          photo-800.webp 800w,
+          photo-1200.webp 1200w,
+          photo-1600.webp 1600w"
+  sizes="(min-width: 960px) 50vw, 100vw"
+  alt="Descriptive alt text"
+  loading="lazy"
+  decoding="async"
+>
+```
+
+- `srcset` lists available files with their pixel widths (`w` descriptor)
+- `sizes` tells the browser how wide the image will display at each breakpoint
+- The browser picks the smallest file that satisfies the display size and screen density
+
+### Use `<picture>` for Art Direction
+
+When you need different crops or aspect ratios at different breakpoints (not just different sizes), use `<picture>`:
+
+```html
+<picture>
+  <source media="(min-width: 960px)" srcset="hero-wide.webp" type="image/webp">
+  <source media="(min-width: 960px)" srcset="hero-wide.jpg">
+  <source srcset="hero-square.webp" type="image/webp">
+  <img src="hero-square.jpg" alt="..." loading="lazy" decoding="async">
+</picture>
+```
+
+### Image Format Priority
+
+1. **AVIF** — smallest files, best quality, ~93% browser support
+2. **WebP** — good compression, ~97% support
+3. **JPEG/PNG** — universal fallback
+
+Use `<picture>` with `type` to serve modern formats with fallbacks. For most projects, WebP alone is sufficient.
+
+### Lazy Loading
+
+Add `loading="lazy"` to images below the fold. The browser defers loading until the image approaches the viewport.
+
+**Do NOT lazy-load:**
+- Hero images and above-the-fold content (these should load immediately)
+- Images critical to Largest Contentful Paint (LCP)
+
+**Do lazy-load:**
+- Gallery images, card thumbnails, anything below the fold
+- `decoding="async"` can be added to all images — it prevents the image decode from blocking the main thread
+
+### Always Provide Meaningful Alt Text
+
+Every `<img>` must have an `alt` attribute. The text should describe the content or function of the image, not its appearance.
+
+```html
+<!-- Decorative: empty alt (screen readers skip it) -->
+<img src="divider.svg" alt="">
+
+<!-- Informative: describe the content -->
+<img src="chart.png" alt="Sales revenue increased 40% from Q1 to Q3 2024">
+
+<!-- Functional: describe the action -->
+<a href="/home"><img src="logo.svg" alt="Acme Corp home page"></a>
+```
+
 ## Use Container Queries for Component-Level Responsiveness
 
 Media queries respond to the *viewport*. Container queries (Baseline 2023) respond to the *parent container's* size — making components truly self-contained and reusable.
@@ -589,6 +682,7 @@ All `rem`-based values scale automatically.
 6. Use logical properties (`margin-inline-start`) instead of physical properties (`margin-left`)
 7. Use contextual spacing (Stack pattern with `* + *`) - style relationships, not individual elements
 8. Prefer intrinsic responsive patterns (flex-wrap, minmax) over @media breakpoints
-9. Use container queries for component-level responsiveness; media queries for page-level layout
-10. Use subgrid to align nested content across sibling elements
-11. Use relative units (rem, em, ch) for accessible, scalable layouts
+9. Use responsive images (`srcset`, `sizes`, `loading="lazy"`) and prevent layout shift with `aspect-ratio`
+10. Use container queries for component-level responsiveness; media queries for page-level layout
+11. Use subgrid to align nested content across sibling elements
+12. Use relative units (rem, em, ch) for accessible, scalable layouts

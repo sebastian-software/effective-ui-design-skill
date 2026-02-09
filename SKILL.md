@@ -79,6 +79,13 @@ This skill enforces comprehensive UI design guidelines for creating professional
 - Be generous with white space
 - Use container queries for component-level responsiveness; media queries for page-level layout
 - Use subgrid to align nested content across sibling elements (e.g. card grids)
+- Use responsive images (`srcset`, `loading="lazy"`, `aspect-ratio` to prevent layout shift)
+
+### Icons
+- Use SVG icons exclusively — never emoji or icon fonts
+- One icon set, used consistently (e.g. Lucide, Heroicons, Phosphor)
+- Use `currentColor` to inherit text colour; match stroke width to font weight
+- Always pair icons with visible text labels; icon-only buttons need `aria-label`
 
 ### Buttons
 - Define 3 button weights: Primary, Secondary, Tertiary
@@ -108,6 +115,8 @@ Before finalizing any UI design:
    - [ ] Target areas are 48pt+ minimum
    - [ ] Text links are underlined
    - [ ] Semantic HTML used (`<nav>`, `<main>`, `<search>`, landmarks)
+   - [ ] Icons have visible text labels (or `aria-label` for icon-only buttons)
+   - [ ] Images have meaningful `alt` text (empty `alt=""` for decorative)
 
 2. **Visual Hierarchy**
    - [ ] Clear order of importance
