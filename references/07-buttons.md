@@ -69,7 +69,6 @@ Secondary button fill contrast < 3:1 is too low to clearly indicate button shape
 3. Button text contrast: minimum 4.5:1
 4. If identical button styles, contrast between them: minimum 3:1
 5. Target area: minimum 48pt x 48pt
-6. Space between buttons: at least 16pt
 
 ## Use a Single Primary Button for the Most Important Action
 
@@ -209,7 +208,6 @@ Small targets = harder to click/touch (especially motor impairments or one-hande
 **Guidelines:**
 - Minimum 48pt x 48pt
 - Frequently used buttons: even larger
-- Separate buttons by at least 8pt
 
 **Small interactive elements:**
 - Extend target area beyond visual bounds
