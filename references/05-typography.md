@@ -116,11 +116,10 @@ Don't use all available weights - adds noise and clutter. More importantly: avoi
 **Problematic combinations (too close together):**
 - Light vs Thin
 - Book vs Regular
-- Medium vs Regular
 - Semibold vs Bold
 
 **Guidelines:**
-- Pick 2-4 weights with clear visual distinction
+- Typically 2, max 3 weights with clear visual distinction
 - Common useful set: Regular (400), Medium (500), Bold (700)
 - Very thin or thick weights - headings/large text only (difficult at small sizes)
 - Each weight should serve a clear purpose in your hierarchy
@@ -658,7 +657,7 @@ Common mistake: placing text directly on photos.
 
 ## Chapter Summary
 
-1. Limit to regular and bold weights in single sans serif typeface for legibility, neutrality, simplicity
+1. Limit font weights: typically 2, max 3 (e.g. Regular 400, Medium 500, Bold 700) in a single sans serif typeface
 2. Use type scale to create predefined font sizes that work together
 3. Use 1.5+ line height (unitless values) for long body text; decrease line height as font size increases
 4. Ensure 40-80 characters per line for readability

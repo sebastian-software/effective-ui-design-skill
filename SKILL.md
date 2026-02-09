@@ -72,7 +72,7 @@ This skill enforces comprehensive UI design guidelines for creating professional
 - Line height: minimum 1.5 (150%) for body text
 - Line length: 40-80 characters per line
 - Left-align text (for English)
-- Use only regular and bold font weights
+- Limit font weights: typically 2, max 3 (e.g. Regular 400, Medium 500, Bold 700)
 
 ### Layout
 - Space elements based on relationship (closer = more related)
