@@ -1,6 +1,6 @@
 # Effective UI Design
 
-A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that applies UI design guidelines whenever you work on frontend code. Based on the book *Practical UI* by Adham Dannaway, extended with modern CSS features (Baseline 2023-2025) and accessibility best practices.
+A [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill that applies UI design guidelines whenever you work on frontend code. Distilled from 20+ years of building web interfaces, updated for modern CSS (Baseline 2023-2025) and current accessibility standards.
 
 Claude Code tends to produce generic, unstyled interfaces unless you tell it otherwise. This skill fixes that. It enforces consistent spacing, contrast ratios, typography, and layout patterns across everything it generates — without you having to repeat yourself.
 
@@ -36,3 +36,5 @@ The skill activates automatically when Claude Code works on UI or frontend tasks
 ## License
 
 MIT — see [LICENSE](LICENSE) for details.
+
+Copyright (c) 2026 [Sebastian Software GmbH](https://sebastian-software.de), Mainz, Germany.
