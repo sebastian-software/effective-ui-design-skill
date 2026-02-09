@@ -1,12 +1,16 @@
 ---
 name: effective-ui-design
 description: |
-  Comprehensive UI design system with professional guidelines for creating intuitive, accessible, and beautiful interfaces. Use this skill when: (1) Creating any UI/frontend design or code, (2) Designing websites, apps, dashboards, or any digital interface, (3) Writing CSS, HTML, or frontend component code, (4) Reviewing or improving existing UI designs, (5) Making decisions about color, typography, layout, spacing, buttons, or forms, (6) Ensuring accessibility compliance (WCAG 2.1 AA), (7) Creating design systems or component libraries. This skill ensures ALL created UI content follows professional design guidelines without exception.
+  Professional UI design guidelines for accessible, well-structured interfaces. Use when: writing CSS, HTML, or frontend component code; designing websites, apps, dashboards, or any web interface; reviewing or improving existing UI designs; making decisions about colour, typography, layout, spacing, buttons, or forms; ensuring WCAG 2.1 AA accessibility; creating design systems or component libraries. Covers OKLCH colour palettes, 8pt spacing grid, fluid typography with clamp(), container queries, subgrid, form validation patterns, button hierarchy, dark mode, reduced motion, SEO meta tags, and Core Web Vitals.
+license: MIT
+metadata:
+  author: sebastian-software
+  version: "1.0"
 ---
 
 # Effective UI Design
 
-This skill enforces comprehensive UI design guidelines for creating professional, accessible interfaces. Every UI design decision MUST follow these guidelines.
+Enforces professional UI design guidelines for accessible, well-structured interfaces. Apply these rules to every UI design decision without exception.
 
 ## Quick Reference
 

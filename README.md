@@ -1,18 +1,20 @@
 # Effective UI Design
 
-You've seen it happen: Claude Code generates a form with thin gray text, buttons that all look the same, and spacing that feels random. You fix it, move on, and next time it happens again.
+You've seen it happen: your AI agent generates a form with thin gray text, buttons that all look the same, and spacing that feels random. You fix it, move on, and next time it happens again.
 
-This [Claude Code](https://docs.anthropic.com/en/docs/claude-code) skill stops that cycle. Install it once, and every UI task follows professional design guidelines automatically. No reminding, no repeating yourself.
+This [Agent Skill](https://agentskills.io/) stops that cycle. Install it once, and every UI task follows professional design guidelines automatically. No reminding, no repeating yourself.
 
-## How this differs from Anthropic's frontend-design skill
+Works with Claude Code, Cursor, GitHub Copilot, Windsurf, Gemini CLI, and any other agent that supports the [Agent Skills format](https://agentskills.io/specification).
 
-Anthropic ships a [frontend-design](https://github.com/anthropics/courses/tree/master/prompt_engineering_interactive_tutorial/Anthropic%201P/skill-frontend-design) skill that handles creative direction: picking a bold aesthetic, choosing distinctive fonts, avoiding generic "AI look" output. It's good at that.
+## How this differs from the frontend-design skill
 
-It doesn't touch the technical side. No contrast ratios, no spacing system, no form patterns, no accessibility rules, no SEO. A visually striking page that fails WCAG or ships without meta tags is still a problem.
+Anthropic's [frontend-design](https://skills.sh/anthropics/skills/frontend-design) skill handles creative direction: picking a bold aesthetic, choosing distinctive fonts, avoiding generic "AI look" output. It's good at that.
 
-This skill covers that layer. Concrete values, not creative direction:
+It doesn't touch the technical layer. No contrast ratios, no spacing system, no form patterns, no accessibility rules, no SEO. A visually striking page that fails WCAG or ships without meta tags is still a problem.
 
-| This skill | Anthropic's skill |
+This skill covers the engineering side. Concrete values, not creative direction:
+
+| This skill | frontend-design |
 |---|---|
 | WCAG 2.1 AA contrast (4.5:1 text, 3:1 UI) | No contrast requirements |
 | OKLCH palettes, `light-dark()`, relative color syntax | "Cohesive palette" (no method specified) |
@@ -23,11 +25,11 @@ This skill covers that layer. Concrete values, not creative direction:
 | Dark mode, reduced motion, screen reader support | Not covered |
 | SEO meta tags, JSON-LD, Core Web Vitals | Not covered |
 
-They work together. Use Anthropic's skill for the mood. Use this one to make sure the result actually works for every user.
+They work together. Use frontend-design for the mood. Use this one to make sure the result actually works for every user.
 
 ## The problem
 
-Claude Code has no design opinion. Without guidance it defaults to:
+AI agents have no design opinion. Without guidance they default to:
 
 - Text that fails WCAG contrast requirements
 - Buttons with no visual hierarchy (everything looks equally important)
@@ -63,16 +65,16 @@ This isn't a component library or a CSS framework. It doesn't pick your aestheti
 ## Install
 
 ```bash
-git clone git@github.com:sebastian-software/effective-ui-design-skill.git ~/.claude/skills/effective-ui-design
+npx skills add sebastian-software/effective-ui-design-skill
 ```
 
-Or via HTTPS:
+Or manually via git:
 
 ```bash
 git clone https://github.com/sebastian-software/effective-ui-design-skill.git ~/.claude/skills/effective-ui-design
 ```
 
-One command. The skill activates automatically whenever Claude Code works on frontend tasks. Nothing to configure.
+The skill activates automatically whenever the agent works on frontend tasks. Nothing to configure.
 
 ## License
 
