@@ -21,6 +21,7 @@ This skill enforces comprehensive UI design guidelines for creating professional
 | Copywriting | [references/06-copywriting.md](references/06-copywriting.md) |
 | Buttons | [references/07-buttons.md](references/07-buttons.md) |
 | Forms | [references/08-forms.md](references/08-forms.md) |
+| SEO for Frontend | [references/09-seo.md](references/09-seo.md) |
 
 ## Core Principles (ALWAYS Apply)
 
@@ -80,6 +81,8 @@ This skill enforces comprehensive UI design guidelines for creating professional
 - Use container queries for component-level responsiveness; media queries for page-level layout
 - Use subgrid to align nested content across sibling elements (e.g. card grids)
 - Use responsive images (`srcset`, `loading="lazy"`, `aspect-ratio` to prevent layout shift)
+- Gate hover effects behind `@media (hover: hover) and (pointer: fine)` — never hide content behind hover
+- Use `env(safe-area-inset-*)` with `viewport-fit=cover` for fixed/sticky elements on notched devices
 
 ### Icons
 - Use SVG icons exclusively — never emoji or icon fonts
@@ -104,6 +107,16 @@ This skill enforces comprehensive UI design guidelines for creating professional
 - Display hints above fields (not below)
 - Use `:user-valid`/`:user-invalid` for validation that respects interaction timing
 
+### SEO
+- Unique `<title>` per page (50-60 chars, primary keyword near the beginning)
+- Unique `<meta name="description">` per page (150-160 chars)
+- Self-referencing `<link rel="canonical">` on every page
+- One `<h1>` per page, logical heading hierarchy (no level skipping)
+- Open Graph tags (`og:title`, `og:description`, `og:image`) for social sharing
+- JSON-LD structured data for rich results (Article, Product, BreadcrumbList, FAQPage)
+- Descriptive, hyphenated image file names and natural alt text
+- Meet Core Web Vitals: LCP < 2.5s, INP < 200ms, CLS < 0.1
+
 ## Design Checklist
 
 Before finalizing any UI design:
@@ -117,6 +130,9 @@ Before finalizing any UI design:
    - [ ] Semantic HTML used (`<nav>`, `<main>`, `<search>`, landmarks)
    - [ ] Icons have visible text labels (or `aria-label` for icon-only buttons)
    - [ ] Images have meaningful `alt` text (empty `alt=""` for decorative)
+   - [ ] Skip link present as first focusable element
+   - [ ] Viewport meta tag does not disable zoom (`user-scalable=no` / `maximum-scale=1`)
+   - [ ] Composite widgets (tabs, toolbars, menus) use single Tab stop with arrow-key navigation
 
 2. **Visual Hierarchy**
    - [ ] Clear order of importance
@@ -145,6 +161,16 @@ Before finalizing any UI design:
    - [ ] Field widths match expected input
    - [ ] High contrast borders (3:1+)
 
+6. **SEO**
+   - [ ] Unique `<title>` with primary keyword (50-60 chars)
+   - [ ] Unique `<meta name="description">` (150-160 chars)
+   - [ ] Self-referencing canonical tag
+   - [ ] One `<h1>` per page, no heading level skips
+   - [ ] Open Graph tags present (`og:title`, `og:description`, `og:image`)
+   - [ ] JSON-LD structured data where applicable
+   - [ ] Descriptive image file names and alt text
+   - [ ] LCP image not lazy-loaded, has `fetchpriority="high"`
+
 ## Implementation
 
 When creating UI code:
@@ -156,6 +182,7 @@ When creating UI code:
 5. Use the colour palette structure from [references/03-colour.md](references/03-colour.md)
 6. Use the Popover API for tooltips, dropdowns, and menus (no JS library needed)
 7. Use `@starting-style` for CSS-only entry animations on dialogs and popovers
+8. Use the View Transition API for page transitions and shared element animations; always respect `prefers-reduced-motion`
 
 ## Colour Palette Template
 

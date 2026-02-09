@@ -283,6 +283,33 @@ Good: "Payment failed. Update your payment details and try again"
       [Update payment details]
 ```
 
+## Design Empty States
+
+An empty container with no content is never neutral — users cannot tell whether it is loading, broken, or simply unused. Every screen that can be empty needs an intentionally designed empty state.
+
+### Three Types of Empty State
+
+| Type | Trigger | Tone |
+|------|---------|------|
+| **First-use** | User has not yet created content | Encouraging — explain what belongs here and how to start |
+| **User-cleared** | All items completed or removed | Celebratory — confirm the accomplishment ("All caught up!") |
+| **No results** | Search or filter returns nothing | Helpful — suggest corrections ("Check spelling" or "Clear filters") |
+
+### Content Anatomy
+
+1. **Headline** (required) — short, plain-language summary: "No projects yet", "No results for 'xyzzy'"
+2. **Description** (required, 1-2 sentences) — explain what this area is for and why it is empty
+3. **CTA button** (situational) — links directly to the action that fills the state. Use verb + noun: "Create project", "Add first task". Not every empty state needs a CTA — cleared states often just need a confirmation message.
+4. **Illustration or icon** (optional) — reinforces the message. Use `alt=""` on decorative illustrations.
+
+**Guidelines:**
+- First-use empty states are one of the most effective onboarding mechanisms — they teach in context, at the moment of need, without modal tours or coach marks
+- Match the message to the specific scenario — never use a generic "Nothing here" across all empty states
+- Keep it short: one headline, one supporting line, one action at most
+- Never blame the user in no-results states: "We couldn't find anything" not "You didn't enter valid search terms"
+- When the empty state appears dynamically (e.g. after filtering), use `role="status"` so screen readers announce the change
+- Consider starter/sample content as an alternative for first-use states — pre-loaded templates eliminate the empty state entirely
+
 ## Chapter Summary
 
 1. Be concise - avoid unneeded words, use short words, keep sentences under 20 words
@@ -290,3 +317,4 @@ Good: "Payment failed. Update your payment details and try again"
 3. Avoid jargon, slang, abbreviations - keep language simple and conversational
 4. Front-load text - put most important information at start
 5. Break up large info into smaller pieces with descriptive headings
+6. Design every empty state intentionally — explain what belongs there, why it is empty, and what to do next

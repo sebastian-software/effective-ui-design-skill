@@ -372,6 +372,10 @@ Lower opacity makes colours see-through (alpha value 0-1).
 ### Problem with Solid Colours
 Solid colours remain same regardless of background. Elements can have inconsistent prominence on different backgrounds.
 
+**Common failure: fixed grays on coloured backgrounds.** A gray like `#6b6b6b` that passes 4.5:1 contrast on white can drop below 3:1 on a brand-coloured banner or tinted card — the contrast ratio depends on the *actual rendered background*, not an assumed white. This is the most common real-world contrast failure in component libraries.
+
+Always check contrast against the rendered background, not white. Chrome DevTools' contrast picker evaluates the actual composite colour beneath the text.
+
 ### Transparent Colour Solution
 Allows background to mix with foreground - maintains consistent prominence.
 

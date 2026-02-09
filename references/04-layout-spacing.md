@@ -34,6 +34,35 @@ Breaking up information into smaller groups helps structure and organise an inte
 ### Combining Methods
 Use multiple methods together for clearer groupings. If elements are grouped multiple ways, you can often remove containers to simplify.
 
+### Don't Default to Cards
+
+Cards group heterogeneous content (image + text + action) into a self-contained, browsable unit. They are not a general-purpose container.
+
+**Use cards when:**
+- Displaying browsable collections of mixed content (product listings, article teasers)
+- Each item is an entry point to a detail view
+- Items contain varied content types that need visual containment
+
+**Don't use cards when:**
+- A simple list would work — homogeneous text items are faster to scan in a plain list
+- Wrapping a single content section — use a heading and whitespace instead
+- Grouping form fields — use `<fieldset>` and spacing, not a card container
+- Displaying tabular data — use a `<table>` (supports sorting, filtering, comparison)
+- Content is meant to be read sequentially — use body text with headings
+
+**Never nest cards inside cards.** Each card level adds border/shadow/padding chrome that compounds visual noise without adding information. If content inside a card needs sub-grouping, use a heading, divider, or subtle background tint.
+
+**Alternatives to card containers** (from least to most visual weight):
+
+| Separation method | Visual weight |
+|-------------------|---------------|
+| Spacing (whitespace between groups) | Lightest |
+| Background colour (subtle fill difference) | Light |
+| Box shadow (depth cue) | Medium |
+| Border / card container | Heaviest |
+
+Before adding a card border, ask: does this container help the user understand the grouping, or is it just visual noise?
+
 ## Create a Clear Visual Hierarchy
 
 Present information in order of importance.
@@ -652,6 +681,157 @@ Now all cards' titles, bodies, and footers align horizontally across the row —
 - Form labels and inputs need to align across a grid
 - Any nested content needs to participate in the parent's track sizing
 
+## Detect Input Method with Interaction Media Queries
+
+Screen size does not reveal input method. A 13-inch Surface has a touchscreen; a 10-inch iPad can have a keyboard and trackpad. Use `pointer` and `hover` media queries (Baseline 2018) to adapt interaction patterns to the actual input device.
+
+| Query | Matches | Typical Devices |
+|-------|---------|-----------------|
+| `pointer: fine` | Accurate primary pointer | Mouse, trackpad, stylus |
+| `pointer: coarse` | Imprecise primary pointer | Finger on touchscreen |
+| `hover: hover` | Primary input can hover | Mouse, trackpad |
+| `hover: none` | Primary input cannot hover | Touchscreen |
+
+### Gate Hover Effects Behind Capability
+
+On touchscreens, tapping an element triggers `:hover` styles that "stick" after the tap. Gate hover effects behind the combined query:
+
+```css
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px oklch(0% 0 0 / 0.12);
+  }
+}
+```
+
+The combined query `(hover: hover) and (pointer: fine)` is the most reliable pattern — using `hover: hover` alone can match Android devices that emulate hover via long-press.
+
+### Always Provide a Focus Alternative
+
+Every `:hover` interaction must have a `:focus` or `:focus-within` equivalent. Keyboard users never see hover states.
+
+```css
+/* Reveal supplementary info on hover OR focus */
+.card .extra-info { visibility: hidden; }
+
+@media (hover: hover) and (pointer: fine) {
+  .card:is(:hover, :focus-within) .extra-info {
+    visibility: visible;
+  }
+}
+
+/* On touch devices, show the info by default */
+@media (hover: none) {
+  .card .extra-info { visibility: visible; }
+}
+```
+
+### Enlarge Touch Targets for Coarse Pointers
+
+Design touch-friendly as the default. Only *enlarge* for `pointer: coarse` — never shrink for `pointer: fine`. Fitts's Law applies regardless of input device.
+
+```css
+@media (pointer: coarse) {
+  button, a {
+    min-height: 48px;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 1.625rem;
+    height: 1.625rem;
+  }
+}
+```
+
+### `any-pointer` and `any-hover`
+
+The primary `pointer`/`hover` queries test only the primary input device. The `any-pointer` and `any-hover` variants test **all available** input devices — useful for detecting mixed setups like a laptop with touchscreen:
+
+```css
+/* Device has fine pointer AND coarse pointer (e.g. laptop with touchscreen) */
+@media (pointer: fine) and (any-pointer: coarse) {
+  button {
+    min-height: 48px; /* User might switch to touch */
+  }
+}
+```
+
+**Caveats:** These queries are hints, not guarantees. The W3C spec intentionally leaves "primary pointer" determination to the browser. Known inconsistencies:
+- iOS Safari always reports `pointer: coarse`, even with an external mouse or trackpad connected
+- Some Android devices report `pointer: fine` due to virtual mouse drivers
+- Convertible laptops may switch primary pointer when a keyboard is detached or attached
+
+**Never hide critical content or functionality behind hover interactions.** Treat these queries as progressive enhancement — the baseline experience must work without hover.
+
+## Handle Device Safe Areas
+
+Modern devices have hardware features that obscure screen edges — notches, Dynamic Islands, rounded corners, camera cutouts, home indicators, gesture navigation bars. Use `env(safe-area-inset-*)` (Baseline 2020) to keep interactive content visible.
+
+### Enable Edge-to-Edge Layout
+
+By default, the browser insets the viewport to avoid obstructions, and all `env()` values are `0px`. To take control yourself, opt in with `viewport-fit=cover`:
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+```
+
+This lets backgrounds and decorative content bleed to the screen edge while you position interactive content within the safe area using CSS.
+
+### The `max()` Pattern
+
+The most robust approach — ensures at least your design's minimum padding, but accommodates larger safe area insets when present:
+
+```css
+.content {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+```
+
+In portrait on a non-notched device, `safe-area-inset-left` is `0px`, so `max()` resolves to `1rem`. In landscape on a notched iPhone, the inset may be 47px, so `max()` uses that instead.
+
+### Fixed Bottom Navigation
+
+Bottom-fixed elements are the most common safe area issue — the home indicator or gesture bar sits directly on top of them.
+
+```css
+/* Background extends behind home indicator; content is padded above it */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem max(0.5rem, env(safe-area-inset-right))
+           calc(0.75rem + env(safe-area-inset-bottom, 0px))
+           max(0.5rem, env(safe-area-inset-left));
+}
+```
+
+### Fixed Top Header
+
+```css
+.top-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(0.75rem + env(safe-area-inset-top, 0px))
+           max(1rem, env(safe-area-inset-right))
+           0.75rem
+           max(1rem, env(safe-area-inset-left));
+}
+```
+
+### Guidelines
+
+- **Apply to specific elements** (fixed headers, bottom bars, main content) — not globally on `body`. Global padding wastes screen space and prevents full-bleed backgrounds.
+- **Handle landscape orientation.** When a notched phone rotates, the notch moves to a side — `safe-area-inset-left` or `safe-area-inset-right` becomes significant. The `max()` pattern handles this automatically.
+- **Provide fallback values:** `env(safe-area-inset-bottom, 0px)` — the second argument is the fallback for browsers or devices with no insets.
+- **Avoid double-insetting.** Apply safe area padding at one level only — not on both a wrapper and its child.
+- **On Chrome Android**, prefer `bottom` positioning over `padding-bottom` for dynamic insets — the value changes during scroll as the gesture bar retracts, and padding changes trigger layout recalculation.
+
 ## Use Relative Units for Accessible, Scalable Layouts
 
 Avoid `px` for font sizes - it overrides the user's browser font size preference.
@@ -674,7 +854,7 @@ All `rem`-based values scale automatically.
 
 ## Chapter Summary
 
-1. Group related elements using containers, proximity, similarity, or continuity
+1. Group related elements using containers, proximity, similarity, or continuity — don't default to cards when spacing or background tints suffice
 2. Create clear visual hierarchy using size, colour, contrast, spacing, position, depth
 3. Interfaces = rectangles within rectangles with margin, padding, border (box model)
 4. Create predefined spacing options in 8pt increments; space based on relationship
@@ -685,4 +865,6 @@ All `rem`-based values scale automatically.
 9. Use responsive images (`srcset`, `sizes`, `loading="lazy"`) and prevent layout shift with `aspect-ratio`
 10. Use container queries for component-level responsiveness; media queries for page-level layout
 11. Use subgrid to align nested content across sibling elements
-12. Use relative units (rem, em, ch) for accessible, scalable layouts
+12. Use `pointer`/`hover` media queries to adapt interaction to input method — never hide content behind hover
+13. Use `env(safe-area-inset-*)` with `viewport-fit=cover` for notches, home indicators, and gesture bars
+14. Use relative units (rem, em, ch) for accessible, scalable layouts

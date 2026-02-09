@@ -219,6 +219,43 @@ The `<search>` element (Baseline 2023) wraps any search or filtering interface �
 
 It provides a semantic landmark that screen readers expose as a "search" role, letting users jump directly to it.
 
+### Provide Skip Links
+
+Skip links let keyboard users bypass repeated navigation and jump directly to the main content. This is a WCAG 2.4.1 Level A requirement (Bypass Blocks).
+
+```html
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <header><!-- navigation --></header>
+  <main id="main-content" tabindex="-1">
+    <!-- page content -->
+  </main>
+</body>
+```
+
+The `tabindex="-1"` on the target element ensures browsers move focus there when the skip link is activated. Without it, some browsers scroll to the element but leave focus on the link.
+
+```css
+.skip-link {
+  position: absolute;
+  transform: translateY(-100%);
+  transition: transform 0.2s ease-out;
+  z-index: 9999;
+  background: var(--bg, #fff);
+  padding: 8px 16px;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+```
+
+**Guidelines:**
+- Make the skip link the first focusable element on the page
+- Hide it visually but keep it accessible (no `display: none`)
+- Reveal it on focus so sighted keyboard users can see it
+- Point to the `<main>` element (or equivalent primary content container)
+
 ### Assistive Technology
 
 **Screen Readers:**
@@ -236,6 +273,26 @@ It provides a semantic landmark that screen readers expose as a "search" role, l
 - Anyone could get temporary disability (eye/arm injury)
 - Situational disabilities (bright sunny day affecting screen visibility)
 - Good accessibility = great usability
+
+### Never Disable Zoom
+
+Setting `user-scalable=no` or `maximum-scale=1` on the viewport meta tag prevents users from zooming in. This violates WCAG 2.1 Success Criterion 1.4.4 (Resize Text, Level AA) and makes the interface unusable for people with low vision.
+
+```html
+<!-- Never do this -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<!-- Correct -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
+
+**If zoom is disabled to prevent double-tap-to-zoom delay on mobile:** Use `touch-action: manipulation` on interactive elements instead. This disables double-tap zoom on those elements while keeping pinch-to-zoom available everywhere:
+
+```css
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+```
 
 ## Design for Affordance
 
@@ -345,6 +402,48 @@ Browsers that support `:focus-visible` automatically suppress focus rings on mou
 - Offset from element (not inside it)
 - Consistent across all interactive elements
 
+### Keyboard Navigation in Composite Widgets
+
+Composite widgets — tab bars, toolbars, menu bars, listboxes, tree views — should act as a single Tab stop. Users press Tab to reach the widget, then use arrow keys to move between items within it. This is the roving tabindex pattern defined in the WAI-ARIA Authoring Practices Guide (APG).
+
+**The pattern:**
+1. The focused item gets `tabindex="0"`, all other items get `tabindex="-1"`
+2. Arrow keys move focus and update `tabindex` values
+3. Tab moves focus out of the widget entirely
+
+```html
+<div role="tablist">
+  <button role="tab" tabindex="0" aria-selected="true">Tab 1</button>
+  <button role="tab" tabindex="-1">Tab 2</button>
+  <button role="tab" tabindex="-1">Tab 3</button>
+</div>
+```
+
+```javascript
+tablist.addEventListener('keydown', (e) => {
+  const tabs = [...tablist.querySelectorAll('[role="tab"]')];
+  const current = tabs.indexOf(document.activeElement);
+  let next;
+
+  if (e.key === 'ArrowRight') next = (current + 1) % tabs.length;
+  else if (e.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+  else return;
+
+  tabs[current].tabIndex = -1;
+  tabs[next].tabIndex = 0;
+  tabs[next].focus();
+});
+```
+
+**When to use roving tabindex:**
+- Tab bars, toolbars, menu bars (horizontal: Left/Right arrows)
+- Listboxes, tree views (vertical: Up/Down arrows)
+- Grids and data tables (all four arrow keys)
+
+**When NOT needed:**
+- A simple list of links or buttons — each is an independent Tab stop
+- Form fields in sequence — standard Tab order is correct
+
 ## Animation and Motion
 
 Animation adds context that static interfaces can't provide. It offloads spatial reasoning to the brain's visual cortex, reducing cognitive load and increasing perceived speed. But animation is a powerful tool that must be used purposefully — decorative animation wears on users after the fiftieth viewing.
@@ -414,6 +513,50 @@ These values follow a Fibonacci-like relationship (100 + 300 = 400, 300 + 400 = 
 - Peripheral animations benefit from longer durations (300-700ms)
 - When in doubt, halve your duration — developers consistently overestimate how long animations should run
 
+### Spring Easing with linear()
+
+The `linear()` easing function (Baseline 2023) accepts a list of output values that the browser interpolates between, enabling easing curves that `cubic-bezier()` cannot express — including spring physics.
+
+Spring-based motion feels more natural than cubic-bezier because it models physical deceleration. Apple (iOS 17+), Framer Motion, and the animations.dev community have converged on two parameters: **duration** and **bounce** (0 = critically damped, no overshoot; positive = elastic overshoot).
+
+**Default to critically damped springs (bounce = 0)** — they feel responsive without being playful. Reserve bouncy springs for confirmations, celebrations, or deliberately playful interfaces.
+
+```css
+:root {
+  /* Critically damped spring — natural deceleration, no overshoot */
+  --ease-spring: linear(
+    0, 0.009, 0.035, 0.078, 0.136, 0.206, 0.286, 0.373,
+    0.464, 0.557, 0.65, 0.738, 0.819, 0.891, 0.951,
+    0.998, 1.029, 1.047, 1.051, 1.044, 1.029, 1.01,
+    0.99, 0.974, 0.965, 0.961, 0.963, 0.969, 0.978,
+    0.988, 0.997, 1.003, 1.005, 1.003, 1
+  );
+
+  /* Gentle bounce — for playful/confirming interactions */
+  --ease-spring-bouncy: linear(
+    0, 0.004, 0.016, 0.035, 0.063, 0.098, 0.141, 0.191,
+    0.25, 0.316, 0.391, 0.474, 0.566, 0.666, 0.775,
+    0.893, 1.02, 1.086, 1.125, 1.139, 1.131, 1.106,
+    1.067, 1.019, 0.968, 0.921, 0.882, 0.855, 0.843,
+    0.849, 0.871, 0.905, 0.946, 0.989, 1.027, 1.054,
+    1.067, 1.063, 1.044, 1.015, 0.983, 0.956, 0.94,
+    0.939, 0.953, 0.977, 1.005, 1.026, 1.035, 1.029,
+    1.012, 0.993, 0.98, 0.977, 0.984, 0.997, 1.009,
+    1.014, 1.009, 0.999, 0.992, 0.99, 0.994, 1.001, 1
+  );
+}
+```
+
+Generate these values from spring parameters using tools like [linear-easing-generator](https://linear-easing-generator.netlify.app/).
+
+**When CSS springs are enough:**
+- Hover effects, button presses, entry/exit transitions, layout shifts
+
+**When a JS animation library is needed (Framer Motion, React Spring, Motion One):**
+- Gesture-driven animation (drag, swipe, pinch) — the animation must respond to ongoing input
+- Interruptible animations — a new trigger mid-animation must redirect smoothly, not restart
+- Complex orchestrated sequences with stagger, layout animations, or shared element transitions
+
 ### Only Animate Transform and Opacity
 
 For smooth 60fps animations, only animate `transform` and `opacity`. Other properties (width, height, margin, padding) trigger expensive layout recalculations.
@@ -434,9 +577,65 @@ For smooth 60fps animations, only animate `transform` and `opacity`. Other prope
 
 A consistent frame rate matters more than a high one — a steady 30fps looks smoother than 60fps with dips.
 
+### Animate Height with grid-template-rows
+
+The one exception to "only animate transform and opacity": `grid-template-rows` can animate between `0fr` and `1fr`, enabling smooth accordion-style height transitions without JavaScript height calculations (~93% browser support):
+
+```css
+.collapsible {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms ease-out;
+}
+
+.collapsible.is-open {
+  grid-template-rows: 1fr;
+}
+
+.collapsible__inner {
+  overflow: hidden;
+  min-height: 0;
+}
+```
+
+```html
+<div class="collapsible">
+  <div class="collapsible__inner">
+    Content that collapses smoothly
+  </div>
+</div>
+```
+
+**Accessibility caveat:** When collapsed (`0fr`), the content is visually hidden but still in the accessibility tree. Add `visibility: hidden` to the inner element when collapsed so screen readers skip it, and transition visibility alongside:
+
+```css
+.collapsible__inner {
+  overflow: hidden;
+  min-height: 0;
+  visibility: hidden;
+  transition: visibility 300ms;
+}
+
+.collapsible.is-open .collapsible__inner {
+  visibility: visible;
+}
+```
+
+**Future alternative:** `interpolate-size: allow-keywords` (Chrome 129+) will allow direct `height: 0` to `height: auto` transitions — but browser support is not yet sufficient (~70%).
+
 ### Every Entrance Needs an Exit
 
 When something animates onto the screen, it must also animate as it leaves. Alerts that beautifully slide in but instantly vanish on dismissal make the interface feel unfinished. Invest in a system that waits for exit animations to complete before removing elements.
+
+**Exit animations should be faster than entrances.** Users have already processed the element — the exit just needs to confirm it's gone. Use 75-85% of the entrance duration for the exit:
+
+| | Entrance | Exit |
+|---|---|---|
+| **Duration** | 300ms | 225-250ms |
+| **Easing** | `ease-out` (decelerate in) | `ease-in` (accelerate out) |
+| **Perception** | "Here I am" — arrives confidently | "Done" — leaves quickly |
+
+The asymmetry is subtle but noticeable. Symmetric enter/exit feels sluggish because the exit draws too much attention to something the user already dismissed.
 
 ### Use @starting-style for Entry Animations
 
@@ -502,6 +701,43 @@ The Popover API (Baseline 2025) provides native behaviour for floating UI elemen
 
 Combine with `@starting-style` for animated entry/exit — the Popover API and `@starting-style` were designed to work together.
 
+### Use the `inert` Attribute for Non-Modal Content
+
+The `inert` attribute (Baseline 2023) makes an element and all its descendants non-interactive and invisible to assistive technology. It is the correct way to trap focus inside a custom overlay, off-canvas drawer, or wizard step.
+
+```html
+<nav class="drawer" id="drawer">
+  <!-- Drawer content -->
+</nav>
+<main id="main-content" inert>
+  <!-- Main content is unreachable while drawer is open -->
+</main>
+```
+
+**When `inert` is set:**
+- Click/tap events are ignored
+- The element is removed from the tab order
+- Screen readers skip the entire subtree
+- `find-in-page` does not match text inside `inert` content
+
+**You do NOT need `inert` when using:**
+- `<dialog>.showModal()` — the browser automatically makes everything outside the dialog inert
+- Popover API — the browser manages focus and dismissal
+
+**Use `inert` when:**
+- Building a custom drawer/sidebar that overlays the page
+- Implementing a step-by-step wizard where only the current step should be interactive
+- Creating a custom modal without `<dialog>` (though `<dialog>` is preferred)
+
+Style inert regions to reinforce their inactive state:
+
+```css
+[inert] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+```
+
 ### Avoid Flashes of Unloaded States (FOULS)
 
 When loading content dynamically, ensure users never see empty/unloaded pages:
@@ -529,12 +765,122 @@ Vestibular disorders affect ~35% of adults over 40. Seizure-triggering animation
 
 Replace motion-based animations with fades for users who prefer reduced motion — fades do not trigger vestibular disorders.
 
+### View Transitions API
+
+The View Transition API provides native browser support for animated transitions between UI states — both within a single page (SPA) and across page navigations (MPA). It answers the question "what just happened?" by showing spatial relationships between states, reducing cognitive load.
+
+**Browser support:** Same-document transitions are Baseline 2025 (Chrome 111+, Safari 18+, Firefox 144+). Cross-document (MPA) transitions have no Firefox support — use as progressive enhancement only.
+
+#### Same-Document Transitions (SPA)
+
+Wrap DOM updates in `document.startViewTransition()`:
+
+```javascript
+function navigate(item) {
+  if (!document.startViewTransition) {
+    updateDOM(item);
+    return;
+  }
+
+  document.startViewTransition(() => updateDOM(item));
+}
+```
+
+The browser snapshots the old state, runs the callback, then cross-fades between old snapshot and live new DOM over 250ms by default. The old state is a static bitmap; the new state is live (videos continue, content is interactive).
+
+#### Cross-Document Transitions (MPA)
+
+Opt in with CSS on both pages — no JavaScript needed:
+
+```css
+@view-transition {
+  navigation: auto;
+}
+```
+
+Both pages must be on the same origin and both must opt in. Navigations taking longer than 4 seconds are automatically skipped.
+
+#### Shared Element Transitions
+
+Give matching elements the same `view-transition-name` on both pages (or both states). The browser automatically morphs position, size, and content between them:
+
+```css
+/* List page */
+.product-thumbnail { view-transition-name: product-image; }
+
+/* Detail page */
+.product-hero { view-transition-name: product-image; }
+```
+
+Each name must be unique across all rendered elements at the same time. Use `view-transition-name: match-element` (Baseline 2025) for lists where items reorder but don't change identity. Use `view-transition-class` to apply shared animation styles to groups of named elements.
+
+#### Custom Animations
+
+Override the default cross-fade by targeting the pseudo-elements:
+
+```css
+::view-transition-old(root) {
+  animation: 300ms ease-in slide-out-left;
+}
+::view-transition-new(root) {
+  animation: 300ms ease-out slide-in-right;
+}
+```
+
+Use `:active-view-transition-type()` for directional animations (forward vs backward navigation).
+
+#### When to Use View Transitions vs @starting-style
+
+| | View Transitions | `@starting-style` |
+|---|---|---|
+| **Purpose** | Animate between two complete UI states | Animate an element's first appearance |
+| **Scope** | Full page or named elements | Individual elements |
+| **Trigger** | `startViewTransition()` or navigation | Element insertion, `display: none` → visible |
+| **Best for** | Page transitions, list reordering, shared elements | Dialogs, popovers, tooltips, toasts |
+
+#### Performance and Accessibility
+
+- Keep transitions under 500ms — interaction is blocked during the animation
+- Use `view-transition-name` sparingly — each named element creates a bitmap snapshot
+- Do not lazy-load images that participate in transitions
+
+**Always respect `prefers-reduced-motion`.** For MPA transitions, only enable when motion is acceptable:
+
+```css
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+```
+
+For SPA transitions, substitute a quick cross-fade instead of disabling entirely — fades do not trigger vestibular disorders:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation: none;
+  }
+  ::view-transition-old(*) {
+    animation: 150ms ease-out fade-out;
+  }
+  ::view-transition-new(*) {
+    animation: 150ms ease-in fade-in;
+  }
+}
+```
+
 ## Chapter Summary
 
 1. Minimise usability risk by keeping interfaces simple and familiar
 2. Every interface detail needs a logical reason behind it
 3. Minimise interaction cost and cognitive load as much as possible
 4. Create a design system of predefined styles, modular components, and usage guidelines
-5. Good accessibility means great usability — use semantic HTML (`<search>`, landmarks) for screen readers
-6. Use animation purposefully — `@starting-style` enables CSS-only entry animations
-7. Use the Popover API for native tooltips, dropdowns, and menus without JS libraries
+5. Good accessibility means great usability — provide skip links, never disable zoom, use semantic HTML
+6. Use roving tabindex in composite widgets (tabs, toolbars, menus) — one Tab stop, arrow keys within
+7. Use `inert` for off-screen content and custom overlays — native `<dialog>.showModal()` handles this automatically
+8. Only animate `transform` and `opacity` — except `grid-template-rows` for height animations (accordions)
+9. Use `linear()` for spring-like easing in pure CSS; reserve JS animation libraries for gesture-driven or interruptible motion
+10. Exit animations should be ~75-85% of entrance duration with ease-in (vs ease-out for entrance)
+11. Use `@starting-style` for CSS-only entry animations; Popover API for native tooltips/dropdowns/menus
+12. Use the View Transition API for page transitions and shared element animations — always respect `prefers-reduced-motion` and keep under 500ms
