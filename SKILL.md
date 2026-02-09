@@ -67,7 +67,8 @@ This skill enforces comprehensive UI design guidelines for creating professional
 
 ### Typography
 - Use single sans-serif typeface for most interfaces
-- Body text: minimum 18px for long text
+- UI text (labels, buttons, nav): 14px base
+- Body text: 16px base, scale to 18-20px for long-form reading via `clamp()`
 - Line height: minimum 1.5 (150%) for body text
 - Line length: 40-80 characters per line
 - Left-align text (for English)
@@ -142,7 +143,7 @@ Before finalizing any UI design:
 
 3. **Typography**
    - [ ] Single typeface (or 2 max with heading typeface)
-   - [ ] Body text 18px+ for long content
+   - [ ] UI text 14px+, body text 16px+ (18-20px for long-form reading)
    - [ ] Line height 1.5+ for body text
    - [ ] Left-aligned text
    - [ ] 40-80 characters per line

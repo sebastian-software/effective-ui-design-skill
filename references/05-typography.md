@@ -228,12 +228,18 @@ For compact UI components, 14px works well and is common practice (Tailwind's ba
 
 For long-form reading content, don't leave text hard at 16px - scale it:
 
-- **Mobile:** 16-17px is appropriate due to limited space
-- **Tablet/Desktop:** 18-20px when there's room to breathe
+- **Mobile (360-440px):** 16-18px — scales across phone viewports
+- **Desktop (640px+):** 16-20px — scales with viewport; smaller screens (11-13") stay closer to 16px
 
 ```css
 .prose {
-  font-size: clamp(16px, 2.5vw, 19px);
+  font-size: clamp(1rem, 0.4rem + 2.5vw, 1.125rem);        /* 16→18px across 360–440px */
+}
+
+@media (min-width: 640px) {
+  .prose {
+    font-size: clamp(1.125rem, 0.95rem + 0.25vw, 1.25rem);  /* 18→20px across 1120–1920px */
+  }
 }
 ```
 
