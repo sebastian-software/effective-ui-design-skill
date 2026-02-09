@@ -80,29 +80,11 @@ Fill        - Secondary backgrounds
 Background  - White or near-white
 ```
 
-**Typography Options (Type Scale 1.200):**
-```
-Heading 1: 40px / 48px line-height / bold
-Heading 2: 32px / 40px line-height / bold
-Heading 3: 24px / 32px line-height / bold
-Heading 4: 20px / 28px line-height / bold
-Body:      16px / 24px line-height / regular
-Small:     14px / 20px line-height / regular
-```
+**Typography Options:** See [05-typography.md](05-typography.md) for the type scale (1.200 Minor Third, base 16px).
 
-**Spacing Options (8pt Grid):**
-```
-XS:  8pt   - Closely related elements
-S:   16pt  - Related elements
-M:   24pt  - Component padding
-L:   32pt  - Grid gutters, section gaps
-XL:  48pt  - Large section gaps
-XXL: 80pt  - Page section padding
-```
+**Spacing Options:** See [04-layout-spacing.md](04-layout-spacing.md) for the 8pt grid (XS–XXL).
 
-**Shadow Options:**
-- Raised - small, sharp shadow for interactive elements like cards
-- Overlay - larger, softer shadow for dropdowns, floating dialogs
+**Shadow Options:** See [03-colour.md](03-colour.md) for the two shadow levels (Raised, Overlay).
 
 **Border Radius Options:**
 - Small: 8pt
