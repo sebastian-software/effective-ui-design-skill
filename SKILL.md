@@ -142,7 +142,7 @@ Before finalizing any UI design:
    - [ ] Consistent spacing applied
 
 3. **Typography**
-   - [ ] Single typeface (or 2 max with heading typeface)
+   - [ ] 1-2 typefaces (+ optional display/heading typeface)
    - [ ] UI text 14px+, body text 16px+ (18-20px for long-form reading)
    - [ ] Line height 1.5+ for body text
    - [ ] Left-aligned text
